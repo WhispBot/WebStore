@@ -13,7 +13,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     return (
         <SessionProvider session={session}>
             <ThemeProvider attribute="class">
-                <div>
+                <div className="relative flex min-h-screen flex-col">
                     <Header />
                     <Component {...pageProps} />
                 </div>
