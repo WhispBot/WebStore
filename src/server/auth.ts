@@ -8,6 +8,7 @@ import {
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { mysqlTable } from "~/server/db/schema";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -20,14 +21,14 @@ declare module "next-auth" {
     user: {
       id: string;
       // ...other properties
-      // role: UserRole;
+      role: string;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    // ...other properties
+    role: string;
+  }
 }
 
 /**
@@ -36,17 +37,53 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
+  secret: env.NEXTAUTH_SECRET,
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
+    session({ session, token }) {
+      session.user.id = token.id as string;
+      session.user.role = token.role as string;
+
+      return session;
+    },
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+      }
+      return token;
+    },
+  },
+  // adapter: DrizzleAdapter(db, mysqlTable),
+  session: {
+    strategy: "jwt",
+  },
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
+      },
+      authorize(credentials, req) {
+        if (
+          credentials?.username === "demo" &&
+          credentials.password === "1234"
+        ) {
+          const user = {
+            id: "1",
+            email: "test",
+            name: credentials.username,
+            role: "admin",
+          };
+
+          return user;
+        }
+
+        return null;
       },
     }),
-  },
-  adapter: DrizzleAdapter(db, mysqlTable),
-  providers: [
+
     /**
      * ...add more providers here.
      *
