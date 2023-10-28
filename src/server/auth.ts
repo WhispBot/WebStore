@@ -1,9 +1,5 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import {
-  getServerSession,
-  type DefaultSession,
-  type NextAuthOptions,
-} from "next-auth";
+import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
 
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
@@ -17,18 +13,18 @@ import CredentialsProvider from "next-auth/providers/credentials";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: {
-      id: string;
-      // ...other properties
-      role: string;
-    } & DefaultSession["user"];
-  }
+    interface Session extends DefaultSession {
+        user: {
+            id: string;
+            // ...other properties
+            role: string;
+        } & DefaultSession["user"];
+    }
 
-  interface User {
-    // ...other properties
-    role: string;
-  }
+    interface User {
+        // ...other properties
+        role: string;
+    }
 }
 
 /**
@@ -37,63 +33,63 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  secret: env.NEXTAUTH_SECRET,
-  callbacks: {
-    session({ session, token }) {
-      session.user.id = token.id as string;
-      session.user.role = token.role as string;
+    secret: env.NEXTAUTH_SECRET,
+    callbacks: {
+        session({ session, token }) {
+            session.user.id = token.id as string;
+            session.user.role = token.role as string;
 
-      return session;
+            return session;
+        },
+        jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.role = user.role;
+            }
+            return token;
+        },
     },
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.role = user.role;
-      }
-      return token;
+    // adapter: DrizzleAdapter(db, mysqlTable),
+    session: {
+        strategy: "jwt",
     },
-  },
-  // adapter: DrizzleAdapter(db, mysqlTable),
-  session: {
-    strategy: "jwt",
-  },
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
+    pages: {
+        signIn: "/auth/signin",
+    },
+    providers: [
+        CredentialsProvider({
+            name: "Credentials",
 
-      credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" },
-      },
-      authorize(credentials, req) {
-        if (
-          credentials?.username === "demo" &&
-          credentials.password === "1234"
-        ) {
-          const user = {
-            id: "1",
-            email: "test",
-            name: credentials.username,
-            role: "admin",
-          };
+            credentials: {
+                username: { label: "Username", type: "text", placeholder: "jsmith" },
+                password: { label: "Password", type: "password" },
+            },
+            authorize(credentials, req) {
+                if (credentials?.username === "demo" && credentials.password === "1234") {
+                    const user = {
+                        id: "1",
+                        email: "test",
+                        name: credentials.username,
+                        role: "admin",
+                    };
 
-          return user;
-        }
+                    return user;
+                }
 
-        return null;
-      },
-    }),
+                return null;
+            },
+        }),
 
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
-  ],
+        /**
+         * ...add more providers here.
+         *
+         * Most other providers require a bit more work than the Discord provider. For example, the
+         * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
+         * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
+         *
+         * @see https://next-auth.js.org/providers/github
+         */
+    ],
 };
 
 /**
