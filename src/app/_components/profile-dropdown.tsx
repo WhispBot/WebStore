@@ -44,7 +44,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ session }) => {
                         </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
-                        className="w-[250px] p-4 text-primary"
+                        className="w-72 p-4 text-primary"
                         onCloseAutoFocus={(e) => void e.preventDefault()}
                     >
                         <div>

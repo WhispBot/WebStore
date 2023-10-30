@@ -3,6 +3,7 @@ import NavLink from "./nav-link";
 import Link from "next/link";
 import ProfileDropdown from "./profile-dropdown";
 import ThemeToggle from "./toggle-theme";
+import ShopingCart from "./shoping-cart";
 
 export default async function Header() {
     const session = await getServerAuthSession();
@@ -21,6 +22,7 @@ export default async function Header() {
                     <NavLink href="/about">About</NavLink>
                 </div>
                 <div className="flex gap-4">
+                    <ShopingCart />
                     <ProfileDropdown session={session} />
                     <ThemeToggle />
                 </div>
