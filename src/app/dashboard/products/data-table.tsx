@@ -29,7 +29,7 @@ const DataTable = <TData, TValue>({ data, columns }: DataTableProps<TData, TValu
     });
 
     return (
-        <div className="">
+        <div className="border-t">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
