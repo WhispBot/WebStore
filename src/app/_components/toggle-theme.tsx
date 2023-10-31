@@ -22,60 +22,53 @@ const ThemeToggle = () => {
     };
 
     return (
-        <div>
-            <Button
-                variant={"outline"}
-                size={"icon"}
-                onClick={() => handleClick()}
-                className="bg-transparent"
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    onClick={() => handleClick()}
+                    size={"icon"}
+                    className="bg-transparent"
+                >
+                    <Sun className="dark:hidden" />
+                    <MoonStar className="hidden dark:flex" />
+                    <span className="sr-only">Toggle theme</span>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+                align="end"
+                onCloseAutoFocus={(e) => void e.preventDefault()}
+                className=""
             >
-                <Sun className="dark:hidden" />
-                <MoonStar className="hidden dark:flex" />
-                <span className="sr-only">Toggle theme</span>
-            </Button>
-        </div>
-        // <DropdownMenu>
-        //     <DropdownMenuTrigger asChild>
-        //         <button className="text-muted-foreground transition-colors hover:text-foreground">
-        //             <Sun className="dark:hidden" />
-        //             <MoonStar className="hidden dark:flex" />
-        //             <span className="sr-only">Toggle theme</span>
-        //         </button>
-        //     </DropdownMenuTrigger>
-        //     <DropdownMenuContent
-        //         align="end"
-        //         onCloseAutoFocus={(e) => void e.preventDefault()}
-        //         className=""
-        //     >
-        //         <DropdownMenuItem
-        //             onClick={() => setTheme("light")}
-        //             className={cn(
-        //                 "flex items-center gap-2 text-muted-foreground",
-        //                 theme === "light" && "text-foreground"
-        //             )}
-        //         >
-        //             <Sun /> Light
-        //         </DropdownMenuItem>
-        //         <DropdownMenuItem
-        //             onClick={() => setTheme("dark")}
-        //             className={cn(
-        //                 "flex items-center gap-2 text-muted-foreground",
-        //                 theme === "dark" && "text-foreground"
-        //             )}
-        //         >
-        //             <MoonStar /> Dark
-        //         </DropdownMenuItem>
-        //         <DropdownMenuItem
-        //             onClick={() => setTheme("system")}
-        //             className={cn(
-        //                 "flex items-center gap-2 text-muted-foreground",
-        //                 theme === "system" && "text-foreground"
-        //             )}
-        //         >
-        //             <Laptop2 /> System
-        //         </DropdownMenuItem>
-        //     </DropdownMenuContent>
-        // </DropdownMenu>
+                <DropdownMenuItem
+                    onClick={() => setTheme("light")}
+                    className={cn(
+                        "flex items-center gap-2 text-muted-foreground",
+                        theme === "light" && "text-foreground"
+                    )}
+                >
+                    <Sun /> Light
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => setTheme("dark")}
+                    className={cn(
+                        "flex items-center gap-2 text-muted-foreground",
+                        theme === "dark" && "text-foreground"
+                    )}
+                >
+                    <MoonStar /> Dark
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => setTheme("system")}
+                    className={cn(
+                        "flex items-center gap-2 text-muted-foreground",
+                        theme === "system" && "text-foreground"
+                    )}
+                >
+                    <Laptop2 /> System
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 };
 
