@@ -45,7 +45,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ session }) => {
                         </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
-                        className="w-72 p-4 text-primary"
+                        className="w-64"
                         onCloseAutoFocus={(e) => void e.preventDefault()}
                     >
                         <div>
@@ -79,10 +79,13 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ session }) => {
                             <LogOutIcon />
                             Sign out
                         </DropdownMenuItem>
-
-                        <div className="flex w-full select-none flex-col px-2 pt-2 text-muted-foreground">
-                            <span>{session?.user.name}</span>
-                            <span className="text-sm">{session?.user.role}</span>
+                        <div className="flex w-full select-none flex-col px-2 ">
+                            <span className="font-semibold text-foreground">
+                                {session?.user.name}
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                                {session?.user.role}
+                            </span>
                         </div>
                     </DropdownMenuContent>
                 </DropdownMenu>
