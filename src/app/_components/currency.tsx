@@ -2,11 +2,15 @@ import React from "react";
 
 interface CurrencyProps {
     price: number;
-    local: string;
-    currency: string;
+    local?: string;
+    currency?: string;
 }
 
-const Currency: React.FC<CurrencyProps> = ({ price, local, currency }) => {
+const Currency: React.FC<CurrencyProps> = ({
+    price,
+    local = "sv-SE",
+    currency = "SEK",
+}) => {
     const formated = price.toLocaleString(local, {
         style: "currency",
         currency: currency,

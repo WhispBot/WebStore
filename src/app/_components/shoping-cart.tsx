@@ -142,7 +142,7 @@ const ShopingCart = () => {
                         <div className="flex justify-between bg-muted p-4 font-semibold">
                             <span className="">Sum:</span>
                             <div>
-                                <Currency price={total} currency="Sek" local="sv-SE" />
+                                <Currency price={total} currency="SEK" local="sv-SE" />
                             </div>
                         </div>
                         <Button>Checkout</Button>

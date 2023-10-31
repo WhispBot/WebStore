@@ -11,7 +11,7 @@ const SignIn = async () => {
 
     return (
         <main className="absolute left-0 top-0 h-full w-full select-none bg-background">
-            <div className="flex h-16 select-none items-center justify-center border-b-2 bg-card py-4">
+            <div className="flex h-16 select-none items-center justify-center border-b-2 py-4">
                 <Link href="/" className="font-semibold uppercase">
                     Shop
                 </Link>

@@ -1,25 +1,25 @@
 "use client";
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { cn } from "~/lib/utils";
 import { motion } from "framer-motion";
 
 interface NavLinkprops extends React.PropsWithChildren {
     href: string;
+    className?: string;
 }
 
-const NavLink: React.FC<NavLinkprops> = ({ href, children }) => {
-    const segment = useSelectedLayoutSegment();
-
-    const isHome = segment === null && href === "/";
-    const active = href === `/${segment}` || isHome;
+const NavLink: React.FC<NavLinkprops> = ({ href, children, className }) => {
+    const pathName = usePathname();
+    const active = href === pathName;
 
     return (
         <Link
             href={href}
             className={cn(
-                "text-muted-foreground  hover:text-primary whitespace-nowrap uppercase transition-colors",
-                active ? "text-primary font-semibold" : ""
+                "whitespace-nowrap uppercase text-muted-foreground transition-colors hover:text-primary",
+                active ? "font-semibold text-primary" : "",
+                className && className
             )}
         >
             {children}

@@ -10,9 +10,10 @@ import {
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { type Session } from "next-auth";
-import { UserIcon, LogOutIcon, LogIn, Package } from "lucide-react";
+import { UserIcon, LogOutIcon, LogIn, Package, LayoutDashboard } from "lucide-react";
 import { signIn, signOut } from "next-auth/react";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 interface ProfileDropdownProps {
     session: Session | null;
@@ -56,9 +57,15 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ session }) => {
                                 <Package />
                                 Orders
                             </DropdownMenuItem>
-                            {session?.user.role === "admin" ?? (
-                                <DropdownMenuItem className="flex gap-2 font-semibold">
-                                    DashBoard
+                            {session?.user.role === "admin" && (
+                                <DropdownMenuItem
+                                    className="flex gap-2 font-semibold"
+                                    asChild
+                                >
+                                    <Link href={"/dashboard"}>
+                                        <LayoutDashboard />
+                                        Admin DashBoard
+                                    </Link>
                                 </DropdownMenuItem>
                             )}
                         </div>
