@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { useAtom } from "jotai";
 import { shoppingCartStorage } from "./shoping-cart";
 import type Stripe from "stripe";
+import Link from "next/link";
 
 interface ProductCardProps {
     product: Stripe.Product;
@@ -37,7 +38,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     return (
         <div>
-            {product.name}
+            <Link
+                href={`/product/${product.id.split("_")[1]}_${product.name.replace(
+                    " ",
+                    "_"
+                )}`}
+            >
+                {product.name}
+            </Link>
             <Button onClick={() => addItem(product)}>add to cart</Button>
         </div>
     );

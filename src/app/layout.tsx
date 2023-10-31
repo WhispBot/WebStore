@@ -22,7 +22,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
-            <body className={(cn(inter.className), "h-screen")}>
+            <body className={(cn(inter.className), "flex h-screen flex-col")}>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"

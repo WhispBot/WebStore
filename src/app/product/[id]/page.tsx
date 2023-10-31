@@ -1,9 +1,25 @@
-import { type PageProps } from ".next/types/app/page";
 import React from "react";
+import { api } from "~/trpc/server";
 
-const Page: React.FC<PageProps> = ({ params }) => {
-    console.log(params);
-    return <div>Page</div>;
+interface PageProps {
+    params: { id: string };
+    searchParams: Record<string, string | string[] | undefined>;
+}
+
+const Product: React.FC<PageProps> = async ({ params }) => {
+    const id = `prod_${params.id.split("_")[0]}`;
+
+    const product = await api.stripe.getProduct.query({ id });
+
+    return (
+        <main className="flex-grow">
+            <div className="container h-full border-x bg-card">
+                <h1 className="text-4xl">{product.name}</h1>
+
+                <div></div>
+            </div>
+        </main>
+    );
 };
 
-export default Page;
+export default Product;
