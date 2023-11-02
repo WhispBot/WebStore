@@ -1,7 +1,7 @@
 import React from "react";
 
 interface CurrencyProps {
-    price: number;
+    price: number | null;
     local?: string;
     currency?: string;
 }
@@ -11,13 +11,17 @@ const Currency: React.FC<CurrencyProps> = ({
     local = "sv-SE",
     currency = "SEK",
 }) => {
-    const formated = price.toLocaleString(local, {
+    if (price === null) return <></>;
+
+    const convert = price / 100;
+
+    const formated = convert.toLocaleString(local, {
         style: "currency",
         currency: currency,
         minimumFractionDigits: 1,
     });
 
-    return <span>{formated}</span>;
+    return <>{formated}</>;
 };
 
 export default Currency;
