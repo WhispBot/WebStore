@@ -20,4 +20,14 @@ export const stripeRouter = createTRPCRouter({
 
             return result;
         }),
+
+    getPriceByProductId: publicProcedure
+        .input(z.object({ id: z.string() }))
+        .query(async ({ input }) => {
+            const result = await stripe.prices.search({
+                query: `product:"${input.id}"`,
+            });
+
+            return result.data;
+        }),
 });
