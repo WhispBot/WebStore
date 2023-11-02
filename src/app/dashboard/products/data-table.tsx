@@ -29,14 +29,14 @@ const DataTable = <TData, TValue>({ data, columns }: DataTableProps<TData, TValu
     });
 
     return (
-        <div className="border-t">
+        <div className="select-none border-t">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
                                 return (
-                                    <TableHead key={header.id}>
+                                    <TableHead key={header.id} className="p-2">
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
@@ -57,7 +57,7 @@ const DataTable = <TData, TValue>({ data, columns }: DataTableProps<TData, TValu
                                 data-state={row.getIsSelected() && "selected"}
                             >
                                 {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
+                                    <TableCell key={cell.id} className="p-2">
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext()
