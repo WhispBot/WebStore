@@ -1,7 +1,8 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Package } from "lucide-react";
+import Link from "next/link";
 import type Stripe from "stripe";
 import Currency from "~/app/_components/currency";
 import { Button } from "~/app/_components/ui/button";
@@ -10,72 +11,74 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
 
-export type StripeProduct = Pick<
-    Stripe.Product,
-    "name" | "id" | "active" | "default_price" | "description"
->;
+export type StripeProduct = Pick<Stripe.Product, "name" | "id" | "default_price">;
 
 export const columns: ColumnDef<StripeProduct>[] = [
     {
-        accessorKey: "id",
-        header: "Id",
+        id: "image",
+        cell: ({ row }) => {
+            return (
+                <div className="flex justify-center">
+                    <div className="flex items-center justify-center rounded-md border bg-secondary p-2 text-muted-foreground">
+                        <Package />
+                    </div>
+                </div>
+            );
+        },
     },
     {
         accessorKey: "name",
         header: "Name",
-    },
-    {
-        accessorKey: "active",
-        header: "Active",
-    },
-    {
-        accessorKey: "default_price",
-        header: "Default price",
         cell: ({ row }) => {
-            const priceObj: Stripe.Price = row.getValue("default_price");
-
-            const amount = priceObj.unit_amount ?? 0;
-
-            return <Currency price={amount / 100} />;
+            const value: string = row.getValue("name");
+            return <div className="w-[44rem]">{value}</div>;
         },
     },
     {
-        accessorKey: "description",
-        header: "Description",
+        accessorKey: "default_price",
+        header: () => <div className="whitespace-nowrap text-right">Default price</div>,
+        cell: ({ row }) => {
+            const priceObj: Stripe.Price = row.getValue("default_price");
+
+            return (
+                <div className="text-right font-medium">
+                    <Currency price={priceObj.unit_amount} />
+                </div>
+            );
+        },
     },
     {
         id: "action",
         cell: ({ row }) => {
-            const payment = row.original;
+            const product = row.original;
 
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                        align="end"
-                        onCloseAutoFocus={(e) => void e.preventDefault()}
-                    >
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
+                <div className="flex justify-center">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                            align="end"
+                            onCloseAutoFocus={(e) => void e.preventDefault()}
                         >
-                            Copy payment ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                            <DropdownMenuItem asChild>
+                                <Link href={`/dashboard/products/${product.id}`}>
+                                    View product
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="font-semibold text-primary">
+                                Delete product
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             );
         },
     },
