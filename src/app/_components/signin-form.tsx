@@ -41,17 +41,17 @@ const SignInFrom = () => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             username: "",
+            password: "",
         },
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
-        const res = void signIn("credentials", {
+        void signIn("credentials", {
             username: values.username,
             password: values.password,
             redirect: true,
             callbackUrl: callbackUrl,
         });
-        console.log(res);
     };
 
     return (
