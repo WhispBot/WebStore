@@ -9,26 +9,28 @@ const Layout: React.FC<PropsWithChildren> = async ({ children }) => {
     if (session?.user.role !== "admin") redirect("/");
 
     return (
-        <div className="container flex flex-grow border-x p-0">
-            <div className="flex w-64 flex-col border-r pl-10">
-                <div className="flex flex-col p-2">
-                    <span className="text-sm font-bold">General</span>
-                    <NavLink
-                        href="/dashboard"
-                        className="rounded-md p-2 text-sm font-semibold normal-case hover:bg-muted"
-                    >
-                        Overview
-                    </NavLink>
-                </div>
+        <div className="container flex flex-grow  p-0">
+            <div className="flex w-64 flex-col p-4 ">
+                <div className="rounded-md border bg-card p-2">
+                    <div className="flex flex-col  p-2">
+                        <span className="text-sm font-bold">General</span>
+                        <NavLink
+                            href="/dashboard"
+                            className="rounded-md p-2 text-sm font-semibold normal-case hover:bg-muted"
+                        >
+                            Overview
+                        </NavLink>
+                    </div>
 
-                <div className="flex flex-col p-2">
-                    <span className="text-sm font-bold">Products</span>
-                    <NavLink
-                        href="/dashboard/products"
-                        className="rounded-md p-2 text-sm font-semibold normal-case hover:bg-muted"
-                    >
-                        Table
-                    </NavLink>
+                    <div className="flex flex-col p-2">
+                        <span className="text-sm font-bold">Products</span>
+                        <NavLink
+                            href="/dashboard/products"
+                            className="rounded-md p-2 text-sm font-semibold normal-case hover:bg-muted"
+                        >
+                            Table
+                        </NavLink>
+                    </div>
                 </div>
             </div>
             <div className="flex-grow overflow-hidden">{children}</div>

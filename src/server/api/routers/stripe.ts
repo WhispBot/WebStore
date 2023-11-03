@@ -26,6 +26,7 @@ export const stripeRouter = createTRPCRouter({
         .query(async ({ input }) => {
             const result = await stripe.prices.search({
                 query: `product:"${input.id}"`,
+                expand: ["data.product"],
             });
 
             return result.data;

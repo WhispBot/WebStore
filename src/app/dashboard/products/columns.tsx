@@ -34,15 +34,26 @@ export const columns: ColumnDef<StripeProduct>[] = [
     },
     {
         accessorKey: "name",
-        header: "Name",
+        header: () => <span className="text-xs uppercase">Name</span>,
         cell: ({ row }) => {
+            const product = row.original;
+
             const value: string = row.getValue("name");
-            return <div className="w-[44rem]">{value}</div>;
+            return (
+                <div className="w-[44rem]">
+                    <Link
+                        href={`/dashboard/products/${product.id}`}
+                        className="hover:underline"
+                    >
+                        {value}
+                    </Link>
+                </div>
+            );
         },
     },
     {
         accessorKey: "livemode",
-        header: "Live",
+        header: () => <span className="text-xs uppercase">Live</span>,
         cell: ({ row }) => {
             const value: boolean = row.getValue("livemode");
 
@@ -51,7 +62,11 @@ export const columns: ColumnDef<StripeProduct>[] = [
     },
     {
         accessorKey: "default_price",
-        header: () => <div className="whitespace-nowrap text-right">Default price</div>,
+        header: () => (
+            <div className="whitespace-nowrap text-right text-xs uppercase">
+                Default price
+            </div>
+        ),
         cell: ({ row }) => {
             const priceObj: Stripe.Price | null = row.getValue("default_price");
 

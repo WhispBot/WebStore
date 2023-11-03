@@ -29,14 +29,14 @@ const DataTable = <TData, TValue>({ data, columns }: DataTableProps<TData, TValu
     });
 
     return (
-        <div className="select-none border-t">
+        <div className="select-none ">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
                                 return (
-                                    <TableHead key={header.id} className="p-2">
+                                    <TableHead key={header.id} className="h-10 p-1 px-2">
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(

@@ -1,4 +1,4 @@
-import { ArrowLeft, Clipboard, LinkIcon, MoreHorizontal, Package } from "lucide-react";
+import { ArrowLeft, Calculator, LinkIcon, Package, Plus } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import type Stripe from "stripe";
@@ -6,20 +6,10 @@ import Currency from "~/app/_components/currency";
 import { Separator } from "~/app/_components/ui/separator";
 import { api } from "~/trpc/server";
 import dayjs from "dayjs";
-import { Input } from "~/app/_components/ui/input";
 import { Button } from "~/app/_components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "~/app/_components/ui/dropdown-menu";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "~/app/_components/ui/tooltip";
+import DataTable from "../data-table";
+import { columns } from "./columns";
+import { Card, CardContent, CardHeader, CardTitle } from "~/app/_components/ui/card";
 
 interface PageProps {
     params: { id: string };
@@ -38,113 +28,101 @@ const Page: React.FC<PageProps> = async ({ params }) => {
     const created = dayjs(product.created * 1000);
 
     return (
-        <main className="">
-            <div className="p-4">
-                <div className="flex justify-between">
-                    <Link
-                        href="/dashboard/products"
-                        className="flex w-fit items-center gap-1 font-semibold text-muted-foreground hover:text-foreground"
-                    >
-                        <ArrowLeft size={20} /> Products
-                    </Link>
+        <main className="h-full border-x ">
+            <div className="flex flex-col gap-8 p-4">
+                <div className="space-y-4">
+                    <div className="flex justify-between">
+                        <Link
+                            href="/dashboard/products"
+                            className="flex w-fit items-center gap-1 font-semibold text-muted-foreground hover:text-foreground"
+                        >
+                            <ArrowLeft size={20} /> Products
+                        </Link>
 
-                    <Link
-                        href={`https://dashboard.stripe.com/test/products/${product.id}`}
-                        className="flex w-fit items-center gap-1 font-semibold text-muted-foreground hover:text-foreground"
-                        target="_blank"
-                    >
-                        <LinkIcon size={20} /> View product on stripe
-                    </Link>
-                </div>
-                <div className="pt-4">
-                    <div>
-                        <div className="flex gap-4">
-                            <div className="flex items-center justify-center rounded-md border bg-secondary p-4 text-muted-foreground">
-                                <Package />
+                        <Link
+                            href={`https://dashboard.stripe.com/test/products/${product.id}`}
+                            className="flex w-fit items-center gap-1 font-semibold text-muted-foreground hover:text-foreground"
+                            target="_blank"
+                        >
+                            <LinkIcon size={20} /> View product on stripe
+                        </Link>
+                    </div>
+                    <div className="">
+                        <div>
+                            <div className="flex gap-4">
+                                <div className="flex items-center justify-center rounded-md border bg-secondary p-4 text-muted-foreground">
+                                    <Package />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-2xl">{product.name}</span>
+                                    <span>
+                                        <Currency price={priceObj} />
+                                    </span>
+                                </div>
                             </div>
+                            <div>
+                                <span></span>
+                            </div>
+                        </div>
+                        <Separator className="my-2" />
+                        <div className="flex h-12 items-center gap-2">
+                            <div className="flex flex-col ">
+                                <span className="text-muted-foreground">Updated</span>
+                                <span>{updated.format("DD MMM. YYYY")}</span>
+                            </div>
+                            <Separator orientation="vertical" />
                             <div className="flex flex-col">
-                                <span className="text-2xl">{product.name}</span>
-                                <span>
-                                    <Currency price={priceObj} />
+                                <span className="text-muted-foreground">Created</span>
+                                <span>{created.format("DD MMM. YYYY")}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* <Card>
+                    <CardHeader>
+                        <CardTitle className="flex justify-between">
+                            <span>Pricing</span>
+                            <Button variant="outline" className="">
+                                <Plus />
+                                Add
+                            </Button>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        {prices.length > 0 ? (
+                            <div className="rounded-md border">
+                                <DataTable columns={columns} data={prices} />
+                            </div>
+                        ) : (
+                            <div className="flex h-28 flex-col items-center justify-center gap-2 border-t bg-muted/50">
+                                <Calculator />
+                                <span className=" text-sm font-semibold">
+                                    {"There's no price."}
                                 </span>
                             </div>
-                        </div>
-                        <div>
-                            <span></span>
-                        </div>
-                    </div>
-                    <Separator className="my-2" />
-                    <div className="flex h-12 items-center gap-2">
-                        <div className="flex flex-col ">
-                            <span className="text-muted-foreground">Updated</span>
-                            <span>{updated.format("DD MMM. YYYY")}</span>
-                        </div>
-                        <Separator orientation="vertical" />
-                        <div className="flex flex-col">
-                            <span className="text-muted-foreground">Created</span>
-                            <span>{created.format("DD MMM. YYYY")}</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="pt-10">
-                    <span className=" text-3xl font-bold">Prices</span>
-                    <Separator className="my-2" />
-                    <div>
-                        {prices.map((price) => (
-                            <div
-                                key={price.id}
-                                className="flex items-center justify-between gap-2"
-                            >
-                                <div className="flex items-center gap-2">
-                                    <span className="font-semibold">
-                                        <Currency price={price} />
-                                    </span>
+                        )}
+                    </CardContent>
+                </Card> */}
 
-                                    {price.id === priceObj.id && (
-                                        <span className="rounded bg-sky-200 px-2 font-semibold text-sky-800">
-                                            Defualt
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="flex min-w-[350px] items-center gap-2">
-                                    <Input value={price.id} />
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <Button variant="outline" size="icon">
-                                                    <span className="sr-only">
-                                                        Open menu
-                                                    </span>
-                                                    <Clipboard size={16} />
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                Copy to ClipBoard
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                </div>
-                                <div>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" size="icon">
-                                                <span className="sr-only">Open menu</span>
-                                                <MoreHorizontal size={16} />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            <DropdownMenuItem></DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                            </div>
-                        ))}
+                <div className="">
+                    <div className="flex items-center justify-between pb-4">
+                        <span className="text-2xl font-semibold leading-none tracking-tight">
+                            Pricing
+                        </span>
                     </div>
-                    <div className="pt-10">
-                        <span className=" text-3xl font-bold">Metadata</span>
-                        <Separator className="my-2" />
-                        <div></div>
-                    </div>
+                    {prices.length > 0 ? (
+                        <div className="rounded-md border">
+                            <DataTable columns={columns} data={prices} />
+                        </div>
+                    ) : (
+                        <div className="flex h-28 flex-col items-center justify-center gap-2 border-t bg-muted/50">
+                            <Calculator />
+                            <span className=" text-sm font-semibold">
+                                {"There's no price."}
+                            </span>
+                        </div>
+                    )}
                 </div>
             </div>
         </main>
