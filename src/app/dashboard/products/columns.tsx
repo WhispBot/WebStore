@@ -53,11 +53,11 @@ export const columns: ColumnDef<StripeProduct>[] = [
         accessorKey: "default_price",
         header: () => <div className="whitespace-nowrap text-right">Default price</div>,
         cell: ({ row }) => {
-            const priceObj: Stripe.Price = row.getValue("default_price");
+            const priceObj: Stripe.Price | null = row.getValue("default_price");
 
             return (
                 <div className="text-right font-medium">
-                    <Currency price={priceObj.unit_amount} />
+                    <Currency price={priceObj} />
                 </div>
             );
         },

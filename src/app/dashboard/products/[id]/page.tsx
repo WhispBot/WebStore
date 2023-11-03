@@ -65,7 +65,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
                             <div className="flex flex-col">
                                 <span className="text-2xl">{product.name}</span>
                                 <span>
-                                    <Currency price={priceObj.unit_amount} />
+                                    <Currency price={priceObj} />
                                 </span>
                             </div>
                         </div>
@@ -97,7 +97,7 @@ const Page: React.FC<PageProps> = async ({ params }) => {
                             >
                                 <div className="flex items-center gap-2">
                                     <span className="font-semibold">
-                                        <Currency price={price.unit_amount} />
+                                        <Currency price={price} />
                                     </span>
 
                                     {price.id === priceObj.id && (
