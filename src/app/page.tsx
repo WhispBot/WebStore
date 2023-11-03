@@ -7,6 +7,7 @@ import ProductCard from "./_components/product-card";
 
 export default async function Home() {
     const res = await api.stripe.getProducts.query();
+    console.log(res);
 
     // const hello = await api.post.hello.query({ text: "from tRPC" });
     // const session = await getServerAuthSession();
