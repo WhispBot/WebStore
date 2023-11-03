@@ -30,4 +30,11 @@ export const stripeRouter = createTRPCRouter({
 
             return result.data;
         }),
+
+    CreateProduct: protectedProcedure
+        .input(z.object({ name: z.string() }))
+        .mutation(async ({ input }) => {
+            const result = await stripe.products.create({ name: input.name });
+            return result;
+        }),
 });
