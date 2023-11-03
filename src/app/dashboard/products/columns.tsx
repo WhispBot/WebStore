@@ -1,7 +1,7 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Package } from "lucide-react";
+import { Check, MoreHorizontal, Package, X } from "lucide-react";
 import Link from "next/link";
 import type Stripe from "stripe";
 import Currency from "~/app/_components/currency";
@@ -14,7 +14,10 @@ import {
     DropdownMenuTrigger,
 } from "~/app/_components/ui/dropdown-menu";
 
-export type StripeProduct = Pick<Stripe.Product, "name" | "id" | "default_price">;
+export type StripeProduct = Pick<
+    Stripe.Product,
+    "name" | "id" | "default_price" | "livemode"
+>;
 
 export const columns: ColumnDef<StripeProduct>[] = [
     {
@@ -35,6 +38,15 @@ export const columns: ColumnDef<StripeProduct>[] = [
         cell: ({ row }) => {
             const value: string = row.getValue("name");
             return <div className="w-[44rem]">{value}</div>;
+        },
+    },
+    {
+        accessorKey: "livemode",
+        header: "Live",
+        cell: ({ row }) => {
+            const value: boolean = row.getValue("livemode");
+
+            return <div>{value ? <Check color="green" /> : <X color="red" />}</div>;
         },
     },
     {
