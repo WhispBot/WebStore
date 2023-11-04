@@ -29,7 +29,7 @@ const DataTable = <TData, TValue>({ data, columns }: DataTableProps<TData, TValu
     });
 
     return (
-        <div className="select-none ">
+        <div className="select-none rounded-md border">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (

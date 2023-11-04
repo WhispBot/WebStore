@@ -1,7 +1,7 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
-import { Check, MoreHorizontal, Package, X } from "lucide-react";
+import { Check, MoreHorizontal, X } from "lucide-react";
 import Link from "next/link";
 import type Stripe from "stripe";
 import Currency from "~/app/_components/currency";
@@ -21,18 +21,6 @@ export type StripeProduct = Pick<
 
 export const columns: ColumnDef<StripeProduct>[] = [
     {
-        id: "image",
-        cell: ({ row }) => {
-            return (
-                <div className="flex justify-center">
-                    <div className="flex items-center justify-center rounded-md border bg-secondary p-2 text-muted-foreground">
-                        <Package />
-                    </div>
-                </div>
-            );
-        },
-    },
-    {
         accessorKey: "name",
         header: () => <span className="text-xs uppercase">Name</span>,
         cell: ({ row }) => {
@@ -40,7 +28,7 @@ export const columns: ColumnDef<StripeProduct>[] = [
 
             const value: string = row.getValue("name");
             return (
-                <div className="w-[44rem]">
+                <div className="">
                     <Link
                         href={`/dashboard/products/${product.id}`}
                         className="hover:underline"
@@ -53,11 +41,15 @@ export const columns: ColumnDef<StripeProduct>[] = [
     },
     {
         accessorKey: "livemode",
-        header: () => <span className="text-xs uppercase">Live</span>,
+        header: () => <div className="text-right text-xs uppercase">Live</div>,
         cell: ({ row }) => {
             const value: boolean = row.getValue("livemode");
 
-            return <div>{value ? <Check color="green" /> : <X color="red" />}</div>;
+            return (
+                <div className="flex items-center justify-end">
+                    {value ? <Check color="green" /> : <X color="red" />}
+                </div>
+            );
         },
     },
     {

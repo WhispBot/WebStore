@@ -1,7 +1,19 @@
 import React, { type PropsWithChildren } from "react";
-import NavLink from "../_components/nav-link";
 import { getServerAuthSession } from "~/server/auth";
 import { redirect } from "next/navigation";
+import { Separator } from "../_components/ui/separator";
+import { SidebarNav } from "../_components/sidebar-nav";
+
+const sidebarNavItems = [
+    {
+        title: "Dashboard",
+        href: "/dashboard",
+    },
+    {
+        title: "Products",
+        href: "/dashboard/products",
+    },
+];
 
 const Layout: React.FC<PropsWithChildren> = async ({ children }) => {
     const session = await getServerAuthSession();
@@ -9,31 +21,15 @@ const Layout: React.FC<PropsWithChildren> = async ({ children }) => {
     if (session?.user.role !== "admin") redirect("/");
 
     return (
-        <div className="container flex flex-grow  p-0">
-            <div className="flex w-64 flex-col p-4 ">
-                <div className="rounded-md border bg-card p-2">
-                    <div className="flex flex-col  p-2">
-                        <span className="text-sm font-bold">General</span>
-                        <NavLink
-                            href="/dashboard"
-                            className="rounded-md p-2 text-sm font-semibold normal-case hover:bg-muted"
-                        >
-                            Overview
-                        </NavLink>
-                    </div>
-
-                    <div className="flex flex-col p-2">
-                        <span className="text-sm font-bold">Products</span>
-                        <NavLink
-                            href="/dashboard/products"
-                            className="rounded-md p-2 text-sm font-semibold normal-case hover:bg-muted"
-                        >
-                            Table
-                        </NavLink>
-                    </div>
+        <div className="container flex flex-grow border-x p-0">
+            <div className="hidden flex-grow space-y-6 p-10 pb-16 md:block">
+                <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+                    <aside className="-mx-4 lg:w-1/5">
+                        <SidebarNav items={sidebarNavItems} />
+                    </aside>
+                    <div className="flex-1">{children}</div>
                 </div>
             </div>
-            <div className="flex-grow overflow-hidden">{children}</div>
         </div>
     );
 };
