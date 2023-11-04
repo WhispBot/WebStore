@@ -1,7 +1,6 @@
 import React, { type PropsWithChildren } from "react";
 import { getServerAuthSession } from "~/server/auth";
 import { redirect } from "next/navigation";
-import { Separator } from "../_components/ui/separator";
 import { SidebarNav } from "../_components/sidebar-nav";
 
 const sidebarNavItems = [

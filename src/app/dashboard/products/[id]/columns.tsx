@@ -30,7 +30,7 @@ export const columns: ColumnDef<StripePrice>[] = [
     {
         accessorKey: "unit_amount",
         header: () => <span className="text-xs uppercase">price</span>,
-        cell: ({ row, table }) => {
+        cell: ({ row }) => {
             const priceObj: Stripe.Price | null = row.getValue("unit_amount");
             const value = row.original.product as Stripe.Product;
             const id = row.original.id;

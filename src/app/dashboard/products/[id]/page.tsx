@@ -1,4 +1,4 @@
-import { ArrowLeft, Calculator, LinkIcon, Package, Plus } from "lucide-react";
+import { Calculator, LinkIcon, Package } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import type Stripe from "stripe";
@@ -6,10 +6,9 @@ import Currency from "~/app/_components/currency";
 import { Separator } from "~/app/_components/ui/separator";
 import { api } from "~/trpc/server";
 import dayjs from "dayjs";
-import { Button, buttonVariants } from "~/app/_components/ui/button";
+import { buttonVariants } from "~/app/_components/ui/button";
 import DataTable from "../data-table";
 import { columns } from "./columns";
-import { Card, CardContent, CardHeader, CardTitle } from "~/app/_components/ui/card";
 import { cn } from "~/lib/utils";
 
 interface PageProps {
@@ -18,8 +17,6 @@ interface PageProps {
 }
 
 const Page: React.FC<PageProps> = async ({ params }) => {
-    // const id = `prod_${params.id.split("_")[0]}`;
-
     const product = await api.stripe.getProduct.query({ id: params.id });
     const prices = await api.stripe.getPriceByProductId.query({ id: params.id });
 
