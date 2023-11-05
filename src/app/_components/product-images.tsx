@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { api } from "~/trpc/react";
-import { ImageIcon, X } from "lucide-react";
+import { ImageIcon } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { cn } from "~/lib/utils";
 import { Separator } from "./ui/separator";
@@ -22,14 +22,14 @@ const ProductImages: React.FC<ProductImageProps> = ({ productId, urls }) => {
     const [selected, setSelected] = useState<string[]>([]);
     const [edit, setEdit] = useState(false);
 
-    const { mutate, isLoading } = api.stripe.DeleteImage.useMutation({
+    const { mutate, isLoading } = api.stripe.deleteProductImages.useMutation({
         onSuccess: () => {
             toast({
                 title: "Image Deleted",
             });
         },
         onSettled: () => {
-            void utils.stripe.getProduct.invalidate({ id: productId });
+            void utils.stripe.product.invalidate({ id: productId });
             setSelected([]);
             setEdit(false);
         },

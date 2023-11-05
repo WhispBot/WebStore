@@ -1,11 +1,9 @@
 "use client";
 import { useUploadThing } from "~/lib/uploadthing";
-
 import React, { useState } from "react";
 import { Button, buttonVariants } from "./ui/button";
 import { useToast } from "./ui/use-toast";
 import { Upload } from "lucide-react";
-import { Input } from "./ui/input";
 import {
     allowedContentTextLabelGenerator,
     generateMimeTypes,
@@ -23,16 +21,11 @@ interface UploadButtonProps {
 const UploadButton: React.FC<UploadButtonProps> = ({ productId }) => {
     const { toast } = useToast();
 
-    const update = toast({
-        title: "",
-        description: "",
-    });
-
     const [files, setFiles] = useState<File[]>([]);
     const utils = api.useUtils();
-    const updateMutation = api.stripe.updateProduct.useMutation({
+    const updateMutation = api.stripe.updateProductImages.useMutation({
         onSettled: () => {
-            void utils.stripe.getProduct.invalidate({ id: productId });
+            void utils.stripe.product.invalidate({ id: productId });
         },
     });
 

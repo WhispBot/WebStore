@@ -1,5 +1,5 @@
 "use client";
-import { Calculator, ImageIcon, LinkIcon, Package } from "lucide-react";
+import { Calculator, LinkIcon, Package } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import type Stripe from "stripe";
@@ -21,9 +21,9 @@ interface PageProps {
 }
 
 const Page: React.FC<PageProps> = ({ params }) => {
-    const { data: product } = api.stripe.getProduct.useQuery({ id: params.id });
+    const { data: product } = api.stripe.product.useQuery({ id: params.id });
     const { data: prices, isLoading: isLoadingPrices } =
-        api.stripe.getPriceByProductId.useQuery({ id: params.id });
+        api.stripe.priceByProductId.useQuery({ id: params.id });
 
     const priceObj = product?.default_price as Stripe.Price;
 

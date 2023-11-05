@@ -9,7 +9,7 @@ interface PageProps {
 const Product: React.FC<PageProps> = async ({ params }) => {
     const id = `prod_${params.id.split("_")[0]}`;
 
-    const product = await api.stripe.getProduct.query({ id });
+    const product = await api.stripe.product.query({ id });
 
     return (
         <main className="flex-grow">

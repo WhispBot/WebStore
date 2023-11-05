@@ -7,12 +7,12 @@ import { utapi } from "~/server/uploadthing";
 const stripe = new Stripe(env.STRIPE_API_KEY, { apiVersion: "2023-10-16" });
 
 export const stripeRouter = createTRPCRouter({
-    getProducts: publicProcedure.query(async () => {
+    products: publicProcedure.query(async () => {
         const result = await stripe.products.list({ expand: ["data.default_price"] });
 
         return result.data;
     }),
-    getProduct: publicProcedure
+    product: publicProcedure
         .input(z.object({ id: z.string() }))
         .query(async ({ input }) => {
             const result = await stripe.products.retrieve(input.id, {
@@ -22,7 +22,7 @@ export const stripeRouter = createTRPCRouter({
             return result;
         }),
 
-    getPriceByProductId: publicProcedure
+    priceByProductId: publicProcedure
         .input(z.object({ id: z.string() }))
         .query(async ({ input }) => {
             const result = await stripe.prices.search({
@@ -40,7 +40,7 @@ export const stripeRouter = createTRPCRouter({
             return result;
         }),
 
-    updateProduct: protectedProcedure
+    updateProductImages: protectedProcedure
         .input(z.object({ id: z.string(), url: z.string().array() }))
         .mutation(async ({ input }) => {
             const result = await stripe.products.retrieve(input.id);
@@ -54,7 +54,7 @@ export const stripeRouter = createTRPCRouter({
             });
         }),
 
-    DeleteImage: protectedProcedure
+    deleteProductImages: protectedProcedure
         .input(z.object({ urls: z.string().array(), id: z.string() }))
         .mutation(async ({ input }) => {
             const product = await stripe.products.retrieve(input.id);

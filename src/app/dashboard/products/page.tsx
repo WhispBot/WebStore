@@ -6,7 +6,7 @@ import CreateDialog from "~/app/_components/create-dialog";
 import { Separator } from "~/app/_components/ui/separator";
 
 const Page = async () => {
-    const data = await api.stripe.getProducts.query();
+    const data = await api.stripe.products.query();
     // const addMutation = api.stripe.createProduct;
 
     return (
