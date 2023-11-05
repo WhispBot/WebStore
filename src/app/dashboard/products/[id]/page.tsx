@@ -1,4 +1,4 @@
-import { Calculator, LinkIcon, Package } from "lucide-react";
+import { Calculator, ImageIcon, LinkIcon, Package, X } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import type Stripe from "stripe";
@@ -10,6 +10,9 @@ import { buttonVariants } from "~/app/_components/ui/button";
 import DataTable from "../data-table";
 import { columns } from "./columns";
 import { cn } from "~/lib/utils";
+import Image from "next/image";
+import UploadButton from "~/app/_components/upload-button";
+import ProductImage from "~/app/_components/product-image";
 
 interface PageProps {
     params: { id: string };
@@ -29,16 +32,28 @@ const Page: React.FC<PageProps> = async ({ params }) => {
         <main className="space-y-6">
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <div className="flex gap-4">
-                        <div>
+                    <div className="flex items-center gap-4">
+                        <div className="">
                             <h3 className="text-lg font-medium">{product.name}</h3>
                             <p className="text-sm text-muted-foreground">
                                 <Currency price={priceObj} />
                             </p>
                         </div>
-
-                        <div className="flex items-center justify-center rounded-md border bg-secondary p-4 text-muted-foreground">
-                            <Package />
+                        <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-md border bg-secondary text-muted-foreground">
+                            {product.images.length > 0 ? (
+                                <>
+                                    <Image
+                                        width={64}
+                                        height={64}
+                                        src={product.images[0] ?? ""}
+                                        alt=""
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <Package />
+                                </>
+                            )}
                         </div>
                     </div>
 
@@ -77,10 +92,33 @@ const Page: React.FC<PageProps> = async ({ params }) => {
                         <DataTable columns={columns} data={prices} />
                     </div>
                 ) : (
-                    <div className="flex h-28 flex-col items-center justify-center gap-2 border-t bg-muted/50">
+                    <div className="flex h-40 flex-col items-center justify-center gap-2 border-t bg-muted/50">
                         <Calculator />
                         <span className=" text-sm font-semibold">
                             {"There's no price."}
+                        </span>
+                    </div>
+                )}
+            </div>
+            <Separator />
+            <div className="">
+                <div className="flex items-center justify-between pb-4">
+                    <h3 className="text-lg font-medium">Images</h3>
+                    <div>
+                        <UploadButton productId={params.id} />
+                    </div>
+                </div>
+                {product.images.length > 0 ? (
+                    <div className="flex gap-4">
+                        {product.images.map((url) => (
+                            <ProductImage key={url} url={url} productId={params.id} />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex h-40 flex-col items-center justify-center gap-2 border-t bg-muted/50">
+                        <ImageIcon />
+                        <span className=" text-sm font-semibold">
+                            {"There's no Imgaes."}
                         </span>
                     </div>
                 )}

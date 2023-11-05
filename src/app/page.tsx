@@ -13,9 +13,11 @@ export default async function Home() {
 
     return (
         <main className="">
-            {res.map((product) => (
-                <ProductCard product={product} key={product.id} />
-            ))}
+            <div className="flex gap-2">
+                {res.map((product) => (
+                    <ProductCard product={product} key={product.id} />
+                ))}
+            </div>
         </main>
     );
 }
