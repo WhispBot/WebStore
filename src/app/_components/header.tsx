@@ -22,7 +22,7 @@ export default async function Header() {
                     <NavLink href="/about">About</NavLink>
                 </div>
                 <div className="flex gap-4">
-                    <ShopingCart />
+                    {/* <ShopingCart /> */}
                     <ProfileDropdown session={session} />
                     <ThemeToggle />
                 </div>

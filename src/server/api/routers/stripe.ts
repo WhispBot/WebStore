@@ -54,24 +54,24 @@ export const stripeRouter = createTRPCRouter({
             });
         }),
 
-    getImages: protectedProcedure
-        .input(z.object({ id: z.string() }))
-        .query(async ({ input }) => {
-            const res = await stripe.products.retrieve(input.id);
-            return res.images;
-        }),
-
     DeleteImage: protectedProcedure
-        .input(z.object({ url: z.string(), id: z.string() }))
+        .input(z.object({ urls: z.string().array(), id: z.string() }))
         .mutation(async ({ input }) => {
             const product = await stripe.products.retrieve(input.id);
-            const newimages = product.images.filter((url) => input.url !== url);
-            const splitArr = input.url.split("/");
-            const fileKey = splitArr[splitArr.length - 1] ?? "";
 
-            await utapi.deleteFiles(fileKey);
-            const res = await stripe.products.update(input.id, { images: newimages });
+            const newImages = product.images.filter((url) => !input.urls.includes(url));
 
+            const fileKeys = input.urls.reduce((acc: string[], obj) => {
+                const splitArr = obj.split("/");
+                const fileKey = splitArr[splitArr.length - 1] ?? "";
+                acc.push(fileKey);
+
+                return acc;
+            }, []);
+            await utapi.deleteFiles(fileKeys);
+            const res = await stripe.products.update(input.id, {
+                images: newImages.length <= 0 ? null : newImages,
+            });
             return res;
         }),
 });

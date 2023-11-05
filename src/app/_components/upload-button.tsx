@@ -14,7 +14,7 @@ import {
 import { Label } from "./ui/label";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
-import { useRouter } from "next/navigation";
+import LoadingSpinner from "./loading-spinner";
 
 interface UploadButtonProps {
     productId: string;
@@ -22,10 +22,19 @@ interface UploadButtonProps {
 
 const UploadButton: React.FC<UploadButtonProps> = ({ productId }) => {
     const { toast } = useToast();
+
+    const update = toast({
+        title: "",
+        description: "",
+    });
+
     const [files, setFiles] = useState<File[]>([]);
     const utils = api.useUtils();
-    const updateMutation = api.stripe.updateProduct.useMutation();
-    const router = useRouter();
+    const updateMutation = api.stripe.updateProduct.useMutation({
+        onSettled: () => {
+            void utils.stripe.getProduct.invalidate({ id: productId });
+        },
+    });
 
     const { startUpload, isUploading, permittedFileInfo } = useUploadThing(
         "imageUploader",
@@ -43,7 +52,6 @@ const UploadButton: React.FC<UploadButtonProps> = ({ productId }) => {
                     return acc;
                 }, []);
                 updateMutation.mutate({ id: productId, url: urls ?? [] });
-                router.refresh();
                 toast({
                     title: "Uploaded successfully!",
                     description: "",
@@ -80,7 +88,12 @@ const UploadButton: React.FC<UploadButtonProps> = ({ productId }) => {
                 </Button>
             )}
 
-            <Label className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}>
+            <Label
+                className={cn(
+                    "cursor-pointer",
+                    buttonVariants({ variant: "secondary", size: "sm" })
+                )}
+            >
                 <input
                     className="hidden"
                     type="file"
@@ -92,7 +105,11 @@ const UploadButton: React.FC<UploadButtonProps> = ({ productId }) => {
                     }}
                 />
                 <span className="ut-px-3 ut-py-2 ut-text-white">
-                    {isUploading ? <>loading</> : `Choose File${multiple ? `(s)` : ``}`}
+                    {isUploading ? (
+                        <LoadingSpinner />
+                    ) : (
+                        `Choose File${multiple ? `(s)` : ``}`
+                    )}
                 </span>
             </Label>
         </div>

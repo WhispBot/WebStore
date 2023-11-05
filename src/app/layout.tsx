@@ -8,10 +8,8 @@ import { ThemeProvider } from "./_components/theme-provider";
 import { cn } from "~/lib/utils";
 import Header from "./_components/header";
 import { Toaster } from "./_components/ui/toaster";
-
 const inter = Inter({
     subsets: ["latin"],
-    variable: "--font-sans",
 });
 
 export const metadata = {
