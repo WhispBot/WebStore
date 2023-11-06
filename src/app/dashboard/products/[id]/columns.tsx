@@ -137,7 +137,9 @@ const Aciton: React.FC<{ product: Stripe.Product; priceId: string }> = ({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
-                        <Link href={`/dashboard/products/${priceId}`}>View price</Link>
+                        <Link href={`/dashboard/products/${priceId}`} target="_blank">
+                            View price
+                        </Link>
                     </DropdownMenuItem>
                     {priceId !== product.default_price && (
                         <DropdownMenuItem
@@ -160,14 +162,18 @@ const Aciton: React.FC<{ product: Stripe.Product; priceId: string }> = ({
                     <AlertDialogHeader>
                         <AlertDialogTitle>Delete price</AlertDialogTitle>
                         <AlertDialogDescription>
-                            {`Are you sure you want to delete this price? This can't be
-                            undone and may cause issues with existing integrations.`}
+                            {`If you want to delete this price you need to goto stipes dashboard`}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => console.log(2)}>
-                            Delete
+                        <AlertDialogAction asChild>
+                            <Link
+                                href={`https://dashboard.stripe.com/test/prices/${priceId}`}
+                                target="_blank"
+                            >
+                                Goto stripe
+                            </Link>
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

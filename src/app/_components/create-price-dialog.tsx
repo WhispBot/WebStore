@@ -8,7 +8,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "./ui/dialog";
-import { Car, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { z } from "zod";
