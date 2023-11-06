@@ -33,11 +33,37 @@ export const stripeRouter = createTRPCRouter({
             return result.data;
         }),
 
+    createPrice: protectedProcedure
+        .input(
+            z.object({
+                id: z.string(),
+                price: z.number(),
+                currency: z.string(),
+            })
+        )
+        .mutation(async ({ input }) => {
+            const res = await stripe.prices.create({
+                currency: input.currency,
+                unit_amount: input.price * 100,
+                product: input.id,
+            });
+            return res;
+        }),
+
     createProduct: protectedProcedure
         .input(z.object({ name: z.string() }))
         .mutation(async ({ input }) => {
             const result = await stripe.products.create({ name: input.name });
             return result;
+        }),
+
+    updateDefaultPrice: protectedProcedure
+        .input(z.object({ id: z.string(), priceId: z.string() }))
+        .mutation(async ({ input }) => {
+            const res = await stripe.products.update(input.id, {
+                default_price: input.priceId,
+            });
+            return res;
         }),
 
     updateProductImages: protectedProcedure

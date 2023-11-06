@@ -18,7 +18,7 @@ const Currency: React.FC<CurrencyProps> = ({
         const formated = convert.toLocaleString(local, {
             style: "currency",
             currency: currency,
-            minimumFractionDigits: 1,
+            minimumFractionDigits: 2,
         });
         return <>{formated}</>;
     }
@@ -32,7 +32,7 @@ const Currency: React.FC<CurrencyProps> = ({
     const formated = convert.toLocaleString(local, {
         style: "currency",
         currency: currency,
-        minimumFractionDigits: 0,
+        minimumFractionDigits: 2,
     });
 
     return <>{formated}</>;

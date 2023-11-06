@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { Button } from "./ui/button";
 import { api } from "~/trpc/react";
 import { ImageIcon } from "lucide-react";
@@ -82,46 +82,54 @@ const ProductImages: React.FC<ProductImageProps> = ({ productId, urls }) => {
                 </div>
             </div>
             <Separator className="mb-4 mt-1" />
-            {urls?.length ?? 0 > 0 ? (
-                <>
-                    <div
-                        className={cn(
-                            "flex gap-4 rounded-md",
-                            edit && "p-2 ring ring-destructive"
-                        )}
-                    >
-                        {urls?.map((url) => (
-                            <div
-                                key={url}
-                                className={cn(
-                                    "select-none  rounded-md",
-                                    selected.find((selected) => selected === url)
-                                        ? "ring ring-destructive"
-                                        : ""
-                                )}
-                                onClick={() => handleSelected(url)}
-                            >
-                                <Image
-                                    className="pointer-events-none rounded-md"
-                                    width={150}
-                                    height={150}
-                                    src={url}
-                                    alt=""
-                                />
-                            </div>
-                        ))}
+            <Suspense
+                fallback={
+                    <div className="flex h-40 flex-col items-center justify-center gap-2">
+                        <LoadingSpinner />
                     </div>
-                </>
-            ) : (
-                <>
-                    <div className="flex h-40 flex-col items-center justify-center gap-2 ">
-                        <ImageIcon />
-                        <span className=" text-sm font-semibold">
-                            {"There's no Imgaes."}
-                        </span>
-                    </div>
-                </>
-            )}
+                }
+            >
+                {urls?.length ?? 0 > 0 ? (
+                    <>
+                        <div
+                            className={cn(
+                                "flex gap-4 rounded-md",
+                                edit && "p-2 ring ring-destructive"
+                            )}
+                        >
+                            {urls?.map((url) => (
+                                <div
+                                    key={url}
+                                    className={cn(
+                                        "select-none  rounded-md",
+                                        selected.find((selected) => selected === url)
+                                            ? "ring ring-destructive"
+                                            : ""
+                                    )}
+                                    onClick={() => handleSelected(url)}
+                                >
+                                    <Image
+                                        className="pointer-events-none rounded-md"
+                                        width={150}
+                                        height={150}
+                                        src={url}
+                                        alt=""
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="flex h-40 flex-col items-center justify-center gap-2 ">
+                            <ImageIcon />
+                            <span className=" text-sm font-semibold">
+                                {"There's no Imgaes."}
+                            </span>
+                        </div>
+                    </>
+                )}
+            </Suspense>
         </div>
     );
 };

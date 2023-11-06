@@ -1,5 +1,5 @@
 "use client";
-import { Calculator, LinkIcon, Package } from "lucide-react";
+import { LinkIcon, Package } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import type Stripe from "stripe";
@@ -7,13 +7,11 @@ import Currency from "~/app/_components/currency";
 import { Separator } from "~/app/_components/ui/separator";
 import dayjs from "dayjs";
 import { buttonVariants } from "~/app/_components/ui/button";
-import DataTable from "../data-table";
-import { columns } from "./columns";
 import { cn } from "~/lib/utils";
 import Image from "next/image";
 import { api } from "~/trpc/react";
-import LoadingSpinner from "~/app/_components/loading-spinner";
 import ProductImages from "~/app/_components/product-images";
+import ProductPrices from "~/app/_components/product-prices";
 
 interface PageProps {
     params: { id: string };
@@ -22,8 +20,6 @@ interface PageProps {
 
 const Page: React.FC<PageProps> = ({ params }) => {
     const { data: product } = api.stripe.product.useQuery({ id: params.id });
-    const { data: prices, isLoading: isLoadingPrices } =
-        api.stripe.priceByProductId.useQuery({ id: params.id });
 
     const priceObj = product?.default_price as Stripe.Price;
 
@@ -84,32 +80,7 @@ const Page: React.FC<PageProps> = ({ params }) => {
                     </div>
                 </div>
             </div>
-            <div className="">
-                <div className="flex items-center justify-between ">
-                    <h3 className="text-lg font-medium">Pricing</h3>
-                </div>
-                <Separator className="mb-4 mt-1" />
-                {isLoadingPrices ? (
-                    <div className="flex h-40 flex-col items-center justify-center gap-2">
-                        <LoadingSpinner />
-                    </div>
-                ) : (
-                    <>
-                        {prices?.length ?? 0 > 0 ? (
-                            <div className="">
-                                <DataTable columns={columns} data={prices ?? []} />
-                            </div>
-                        ) : (
-                            <div className="flex h-40 flex-col items-center justify-center gap-2">
-                                <Calculator />
-                                <span className=" text-sm font-semibold">
-                                    {"There's no price."}
-                                </span>
-                            </div>
-                        )}
-                    </>
-                )}
-            </div>
+            <ProductPrices productId={params.id} />
             <ProductImages urls={product?.images} productId={params.id} />
         </main>
     );

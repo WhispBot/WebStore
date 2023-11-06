@@ -20,6 +20,19 @@ import {
 } from "~/app/_components/ui/dropdown-menu";
 import Link from "next/link";
 import { Badge } from "~/app/_components/ui/badge";
+import { api } from "~/trpc/react";
+import { useToast } from "~/app/_components/ui/use-toast";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "~/app/_components/ui/alert-dialog";
+import { useState } from "react";
 
 export type StripePrice = Pick<
     Stripe.Price,
@@ -34,17 +47,19 @@ export const columns: ColumnDef<StripePrice>[] = [
             const priceObj: Stripe.Price | null = row.getValue("unit_amount");
             const value = row.original.product as Stripe.Product;
             const id = row.original.id;
+            const c = row.original.currency;
 
             return (
-                <div className="flex gap-2">
-                    <span className="font-semibold">
-                        <Currency price={priceObj} />
-                    </span>
+                <div className="flex gap-4">
+                    <div className="flex gap-1">
+                        <span className="font-semibold">
+                            <Currency price={priceObj} />
+                        </span>
+                        <span className="font-semibold uppercase">{c}</span>
+                    </div>
                     <div>
                         {id === value.default_price && (
-                            <Badge className="bg-sky-200 text-sky-900 hover:bg-sky-200">
-                                Default
-                            </Badge>
+                            <Badge variant="outlinePrimary">Default</Badge>
                         )}
                     </div>
                 </div>
@@ -60,7 +75,6 @@ export const columns: ColumnDef<StripePrice>[] = [
             return (
                 <div className="flex gap-2">
                     <Input value={value} className="max-w-[300px]" />
-                    {/* <span>{value}</span> */}
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger>
@@ -81,30 +95,83 @@ export const columns: ColumnDef<StripePrice>[] = [
     {
         id: "action",
         cell: ({ row }) => {
-            const product = row.original;
+            const id = row.original.id;
+            const product = row.original.product as Stripe.Product;
 
             return (
                 <div className="flex justify-center">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem asChild>
-                                <Link href={`/dashboard/products/${product.id}`}>
-                                    View product
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="font-semibold text-primary">
-                                Delete product
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Aciton product={product} priceId={id} />
                 </div>
             );
         },
     },
 ];
+
+const Aciton: React.FC<{ product: Stripe.Product; priceId: string }> = ({
+    product,
+    priceId,
+}) => {
+    const [open, setOpen] = useState(false);
+    const { toast } = useToast();
+    const utils = api.useUtils();
+
+    const { mutate } = api.stripe.updateDefaultPrice.useMutation({
+        onSuccess: () => {
+            toast({
+                title: "Default set!",
+            });
+        },
+        onSettled: () => {
+            void utils.stripe.priceByProductId.invalidate({ id: product.id });
+        },
+    });
+
+    return (
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem asChild>
+                        <Link href={`/dashboard/products/${priceId}`}>View price</Link>
+                    </DropdownMenuItem>
+                    {priceId !== product.default_price && (
+                        <DropdownMenuItem
+                            onClick={() => mutate({ id: product.id, priceId: priceId })}
+                        >
+                            Set as default
+                        </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem
+                        className="font-semibold text-primary"
+                        onClick={() => setOpen(!open)}
+                    >
+                        Delete
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <AlertDialog open={open} onOpenChange={() => setOpen(!open)}>
+                {/* <AlertDialogTrigger>Delete price</AlertDialogTrigger> */}
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete price</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            {`Are you sure you want to delete this price? This can't be
+                            undone and may cause issues with existing integrations.`}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => console.log(2)}>
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
+    );
+};
