@@ -2,14 +2,13 @@
 import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "~/app/_components/ui/popover";
-
 import { useAtom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import Currency from "./currency";
+import { shoppingCartStorage } from "~/lib/store";
 
-interface Cart {
+export interface Cart {
     id: string;
     product: CartItem;
     count: number;
@@ -21,8 +20,6 @@ interface CartItem {
     image: string;
     price: number;
 }
-
-export const shoppingCartStorage = atomWithStorage<Cart[]>("cart", []);
 
 const ShopingCart = () => {
     const [cart, setCart] = useAtom(shoppingCartStorage);
@@ -47,7 +44,7 @@ const ShopingCart = () => {
     };
 
     const total = cart.reduce((acc, obj) => {
-        const sum = (obj.product.price / 100) * obj.count;
+        const sum = obj.product.price * obj.count;
 
         const total = acc + sum;
 
@@ -83,9 +80,7 @@ const ShopingCart = () => {
                                                 {item.product.name}
                                             </Link>
                                             <Currency
-                                                price={item.product.price / 100}
-                                                currency="Sek"
-                                                local="sv-SE"
+                                                price={item.product.price * item.count}
                                             />
                                         </div>
                                         <div className="flex h-full items-end justify-end">
