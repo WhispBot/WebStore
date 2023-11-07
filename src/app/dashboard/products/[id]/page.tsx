@@ -12,6 +12,7 @@ import Image from "next/image";
 import { api } from "~/trpc/react";
 import ProductImages from "~/app/_components/product-images";
 import ProductPrices from "~/app/_components/product-prices";
+import LoadingSpinner from "~/app/_components/loading-spinner";
 
 interface PageProps {
     params: { id: string };
@@ -19,12 +20,12 @@ interface PageProps {
 }
 
 const Page: React.FC<PageProps> = ({ params }) => {
-    const { data: product } = api.stripe.product.useQuery({ id: params.id });
+    const { data: product, isLoading } = api.stripe.product.useQuery({ id: params.id });
 
     const priceObj = product?.default_price as Stripe.Price;
 
-    const updated = dayjs(product?.updated ?? 0 * 1000);
-    const created = dayjs(product?.created ?? 0 * 1000);
+    const updated = dayjs((product?.updated ?? 0) * 1000);
+    const created = dayjs((product?.created ?? 0) * 1000);
 
     return (
         <main className="space-y-6">
@@ -33,9 +34,13 @@ const Page: React.FC<PageProps> = ({ params }) => {
                     <div className="flex items-center gap-4">
                         <div className="">
                             <h3 className="text-lg font-medium">{product?.name}</h3>
-                            <p className="text-sm text-muted-foreground">
-                                <Currency price={priceObj ?? null} />
-                            </p>
+                            <span className="text-sm text-muted-foreground">
+                                {isLoading ? (
+                                    <LoadingSpinner />
+                                ) : (
+                                    <Currency price={priceObj ?? null} />
+                                )}
+                            </span>
                         </div>
                         <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-md border bg-secondary text-muted-foreground">
                             {product?.images.length ?? 0 > 0 ? (
@@ -68,15 +73,23 @@ const Page: React.FC<PageProps> = ({ params }) => {
                     </Link>
                 </div>
                 <Separator />
-                <div className="flex h-12 items-center gap-2">
-                    <div className="flex flex-col ">
+                <div className="flex h-12 items-center gap-6 whitespace-nowrap">
+                    <div className="flex h-12 w-20 flex-col">
                         <span className="text-muted-foreground">Updated</span>
-                        <span>{updated.format("DD MMM. YYYY")}</span>
+                        {isLoading ? (
+                            <LoadingSpinner size={16} />
+                        ) : (
+                            <span>{updated.format("D MMM, YYYY")}</span>
+                        )}
                     </div>
                     <Separator orientation="vertical" />
-                    <div className="flex flex-col">
+                    <div className="flex h-12 w-20 flex-col">
                         <span className="text-muted-foreground">Created</span>
-                        <span>{created.format("DD MMM. YYYY")}</span>
+                        {isLoading ? (
+                            <LoadingSpinner size={16} />
+                        ) : (
+                            <span>{created.format("D MMM, YYYY")}</span>
+                        )}
                     </div>
                 </div>
             </div>
