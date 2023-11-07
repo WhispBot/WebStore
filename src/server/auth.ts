@@ -68,7 +68,7 @@ export const authOptions: NextAuthOptions = {
                 if (credentials?.username === "demo" && credentials.password === "1234") {
                     const user = {
                         id: "1",
-                        email: "test",
+                        email: "dead-dummy@outlook.com",
                         name: credentials.username,
                         role: "admin",
                     };

@@ -100,4 +100,37 @@ export const stripeRouter = createTRPCRouter({
             });
             return res;
         }),
+
+    checkoutSession: publicProcedure
+        .input(
+            z.object({
+                email: z.string(),
+                items: z.object({ price: z.string(), quantity: z.number() }).array(),
+            })
+        )
+        .mutation(async ({ input, ctx }) => {
+            const res = await stripe.checkout.sessions.create({
+                ui_mode: "embedded",
+                customer_email: input.email,
+                submit_type: "pay",
+                line_items: input.items,
+                customer_creation: "always",
+                mode: "payment",
+                return_url: `${ctx.headers.get(
+                    "host"
+                )}/return?session_id={CHECKOUT_SESSION_ID}`,
+            });
+            return res.client_secret;
+        }),
+
+    returnSession: publicProcedure
+        .input(
+            z.object({
+                sessionId: z.string(),
+            })
+        )
+        .query(async ({ input }) => {
+            const res = await stripe.checkout.sessions.retrieve(input.sessionId);
+            return res;
+        }),
 });

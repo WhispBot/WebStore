@@ -3,10 +3,11 @@ import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "~/app/_components/ui/popover";
 import { useAtom } from "jotai";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import Link from "next/link";
 import Currency from "./currency";
 import { shoppingCartStorage } from "~/lib/store";
+import { cn } from "~/lib/utils";
 
 export interface Cart {
     id: string;
@@ -140,7 +141,9 @@ const ShopingCart = () => {
                                 <Currency price={total} currency="SEK" local="sv-SE" />
                             </div>
                         </div>
-                        <Button>Checkout</Button>
+                        <Link href="/checkout" className={cn(buttonVariants())}>
+                            Checkout
+                        </Link>
                     </>
                 )}
             </PopoverContent>
