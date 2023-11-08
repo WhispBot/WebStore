@@ -5,6 +5,9 @@ import { env } from "~/env.mjs";
 // import { db } from "~/server/db";
 // import { mysqlTable } from "~/server/db/schema";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { db } from "./db";
+import bcrypt from "bcrypt";
+import { sql } from "drizzle-orm";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -64,16 +67,24 @@ export const authOptions: NextAuthOptions = {
                 username: { label: "Username", type: "text", placeholder: "jsmith" },
                 password: { label: "Password", type: "password" },
             },
-            authorize(credentials, req) {
-                if (credentials?.username === "demo" && credentials.password === "1234") {
-                    const user = {
-                        id: "1",
-                        email: "dead-dummy@outlook.com",
-                        name: credentials.username,
-                        role: "admin",
-                    };
+            async authorize(credentials, req) {
+                const user = await db.query.users.findFirst({
+                    where: sql`email=${credentials?.username}`,
+                });
 
-                    return user;
+                const password = user?.password ?? "";
+                const isUser = await bcrypt.compare(
+                    credentials?.password ?? "",
+                    password
+                );
+
+                if (isUser) {
+                    return {
+                        id: user?.id ?? "",
+                        name: user?.name ?? "",
+                        email: user?.email ?? "",
+                        role: user?.role ?? "",
+                    };
                 }
 
                 return null;

@@ -1,6 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import React from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
     Card,
@@ -19,16 +24,11 @@ import {
     FormLabel,
     FormMessage,
 } from "~/app/_components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import Link from "next/link";
-import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { Input } from "./ui/input";
 
 const formSchema = z.object({
-    username: z.string().min(4).max(20),
+    email: z.string().email(),
     password: z.string(),
 });
 
@@ -40,14 +40,14 @@ const SignInFrom = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            email: "",
             password: "",
         },
     });
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         void signIn("credentials", {
-            username: values.username,
+            username: values.email,
             password: values.password,
             redirect: true,
             callbackUrl: callbackUrl,
@@ -65,10 +65,10 @@ const SignInFrom = () => {
                     <CardContent className="min-w-[400px] pt-4">
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Username</FormLabel>
+                                    <FormLabel>Email</FormLabel>
                                     <FormControl>
                                         <Input placeholder="" {...field} />
                                     </FormControl>
