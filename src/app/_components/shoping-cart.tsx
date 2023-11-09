@@ -1,13 +1,21 @@
 "use client";
+import { PopoverClose } from "@radix-ui/react-popover";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Minus, Plus, ShoppingCart, Trash } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "~/app/_components/ui/popover";
-import { useAtom } from "jotai";
-import { Button, buttonVariants } from "./ui/button";
-import Link from "next/link";
-import Currency from "./currency";
-import { shoppingCartStorage } from "~/lib/store";
+import {
+    cartStorage,
+    cartTotalPriceAtom,
+    cartTotalQuantityAtom,
+    removeCartItemAtom,
+    updateCountAtom,
+} from "~/lib/store";
 import { cn } from "~/lib/utils";
+import Currency from "./currency";
+import { Button, buttonVariants } from "./ui/button";
 
 export interface Cart {
     id: string;
@@ -23,127 +31,111 @@ interface CartItem {
 }
 
 const ShopingCart = () => {
-    const [cart, setCart] = useAtom(shoppingCartStorage);
-
-    const updateCount = (id: string, newCount: number) => {
-        const newCart = [...cart];
-        const filter = newCart.filter((item) => item.id === id)[0];
-        if (filter !== undefined && newCount > 0) {
-            filter.count = newCount;
-            setCart([filter]);
-        }
-    };
-
-    const removeItem = (id: string) => {
-        const newCart = [...cart];
-        const filter = newCart.filter((item) => item.id !== id)[0];
-        if (filter !== undefined) {
-            setCart([filter]);
-        } else {
-            setCart([]);
-        }
-    };
-
-    const total = cart.reduce((acc, obj) => {
-        const sum = obj.product.price * obj.count;
-
-        const total = acc + sum;
-
-        return total;
-    }, 0);
+    const totalQty = parseInt(useAtomValue(cartTotalQuantityAtom));
+    const totalPrice = parseInt(useAtomValue(cartTotalPriceAtom));
+    const items = useAtomValue(cartStorage);
+    const removeCartItem = useSetAtom(removeCartItemAtom);
+    const updateCartCount = useSetAtom(updateCountAtom);
 
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant={"outline"} size={"icon"} className="bg-transparent">
+                <Button
+                    variant={"outline"}
+                    size={"icon"}
+                    className="relative bg-transparent"
+                >
+                    {totalQty > 0 && (
+                        <span className="absolute -bottom-2 -right-1 flex h-5 w-5 items-center justify-center rounded-md bg-foreground px-1 text-background">
+                            {totalQty}
+                        </span>
+                    )}
                     <ShoppingCart />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="flex w-96 flex-col gap-4">
-                {/* <div className="border-b p-3">
-                    <h2 className="text-2xl font-bold">Shopping cart</h2>
-                </div> */}
-                <div className="">
-                    {cart.length === 0 ? (
-                        <div className="flex justify-center ">
-                            <span className=" text-xl font-bold text-muted-foreground">
-                                Your Cart is Empty
-                            </span>
+                {totalQty <= 0 ? (
+                    <span className="text-center text-lg font-semibold text-muted-foreground">
+                        Cart is empty
+                    </span>
+                ) : (
+                    <>
+                        <div className="border-b p-2">
+                            <h2 className="text-2xl font-bold">Cart</h2>
                         </div>
-                    ) : (
-                        <ul className="flex flex-col gap-1">
-                            {cart.map((item) => (
-                                <li key={item.id} className="flex h-full border-b">
-                                    <div className="h-16 w-16 bg-muted"></div>
-                                    <div className="flex h-full w-full flex-col justify-between gap-4 px-2">
-                                        <div className="flex justify-between">
-                                            <Link href={"/"} className="">
-                                                {item.product.name}
-                                            </Link>
+                        <div className="space-y-3">
+                            {items.map((item) => (
+                                <div key={item.id} className="flex gap-2  ">
+                                    <Image
+                                        src={item.image ?? ""}
+                                        alt={item.name}
+                                        width={64}
+                                        height={64}
+                                        className="rounded-md border"
+                                    />
+                                    <div className="flex flex-grow flex-col justify-between ">
+                                        <span className="font-bold">{item.name}</span>
+                                        <span className="font-semibold">
                                             <Currency
-                                                price={item.product.price * item.count}
+                                                price={(item.price ?? 0) * item.quantity}
                                             />
-                                        </div>
-                                        <div className="flex h-full items-end justify-end">
-                                            <div></div>
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex items-center gap-3">
-                                                    <Button
-                                                        variant={"outline"}
-                                                        size={"smIcon"}
-                                                        onClick={() =>
-                                                            updateCount(
-                                                                item.id,
-                                                                item.count - 1
-                                                            )
-                                                        }
-                                                    >
-                                                        <Minus size={16} />
-                                                    </Button>
-                                                    <span>{item.count}</span>
-                                                    <Button
-                                                        variant={"outline"}
-                                                        size={"smIcon"}
-                                                        onClick={() =>
-                                                            updateCount(
-                                                                item.id,
-                                                                item.count + 1
-                                                            )
-                                                        }
-                                                    >
-                                                        <Plus size={16} />
-                                                    </Button>
-                                                </div>
-                                                <div>
-                                                    <Button
-                                                        variant={"outline"}
-                                                        size={"smIcon"}
-                                                        onClick={() =>
-                                                            removeItem(item.id)
-                                                        }
-                                                    >
-                                                        <Trash size={16} />
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </span>
                                     </div>
-                                </li>
+                                    <div className="flex items-end gap-3">
+                                        <Button
+                                            variant="secondary"
+                                            size="smIcon"
+                                            onClick={() =>
+                                                updateCartCount(
+                                                    { id: item.id },
+                                                    item.quantity - 1
+                                                )
+                                            }
+                                        >
+                                            <Minus size={20} />
+                                        </Button>
+                                        {item.quantity}
+                                        <Button
+                                            variant="secondary"
+                                            size="smIcon"
+                                            onClick={() =>
+                                                updateCartCount(
+                                                    { id: item.id },
+                                                    item.quantity + 1
+                                                )
+                                            }
+                                        >
+                                            <Plus size={20} />
+                                        </Button>
+                                        <Button
+                                            onClick={() =>
+                                                removeCartItem({ id: item.id })
+                                            }
+                                            variant="destructive"
+                                            size="smIcon"
+                                        >
+                                            <Trash size={20} />
+                                        </Button>
+                                    </div>
+                                </div>
                             ))}
-                        </ul>
-                    )}
-                </div>
-                {cart.length !== 0 && (
+                        </div>
+                    </>
+                )}
+
+                {totalQty > 0 && (
                     <>
                         <div className="flex justify-between bg-muted p-4 font-semibold">
-                            <span className="">Sum:</span>
-                            <div>
-                                <Currency price={total} currency="SEK" local="sv-SE" />
-                            </div>
+                            <span className="">Total:</span>
+                            <span>
+                                <Currency price={totalPrice} />
+                            </span>
                         </div>
-                        <Link href="/checkout" className={cn(buttonVariants())}>
-                            Checkout
-                        </Link>
+                        <PopoverClose asChild>
+                            <Link href="/cart" className={cn(buttonVariants())}>
+                                To checkout
+                            </Link>
+                        </PopoverClose>
                     </>
                 )}
             </PopoverContent>
