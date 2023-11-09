@@ -3,11 +3,12 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 
-import { TRPCReactProvider } from "~/trpc/react";
-import { ThemeProvider } from "./_components/theme-provider";
 import { cn } from "~/lib/utils";
+import { TRPCReactProvider } from "~/trpc/react";
 import Header from "./_components/header";
+import { ThemeProvider } from "./_components/theme-provider";
 import { Toaster } from "./_components/ui/toaster";
+import JotaiProvider from "./jotai-provider";
 const inter = Inter({
     subsets: ["latin"],
 });
@@ -29,9 +30,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     disableTransitionOnChange
                 >
                     <TRPCReactProvider headers={headers()}>
-                        <Header />
-                        {children}
-                        <Toaster />
+                        <JotaiProvider>
+                            <Header />
+                            {children}
+                            <Toaster />
+                        </JotaiProvider>
                     </TRPCReactProvider>
                 </ThemeProvider>
             </body>
