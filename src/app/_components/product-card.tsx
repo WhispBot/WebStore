@@ -1,112 +1,47 @@
 "use client";
-
-import React from "react";
-import { Button } from "./ui/button";
-import { useAtom } from "jotai";
-import type Stripe from "stripe";
-import Link from "next/link";
-import Currency from "./currency";
-import { Package, ShoppingCart } from "lucide-react";
 import Image from "next/image";
-import { shoppingCartStorage } from "~/lib/store";
+import Link from "next/link";
+import React from "react";
+import type Stripe from "stripe";
+import { cn } from "~/lib/utils";
+import Currency from "./currency";
+import { buttonVariants } from "./ui/button";
 
 interface ProductCardProps {
     product: Stripe.Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-    const [cart, setCart] = useAtom(shoppingCartStorage);
     const price = product.default_price as Stripe.Price;
 
-    const addItem = (product: Stripe.Product) => {
-        const price = product.default_price as Stripe.Price;
-
-        const filterCurrent = cart.filter(({ id }) => id === product.id);
-        const filter = cart.filter(({ id }) => id !== product.id);
-
-        if (filterCurrent.length > 0) {
-            const count = filterCurrent[0]?.count ?? 0;
-            setCart([
-                ...filter,
-                {
-                    id: product.id,
-                    product: {
-                        name: product.name,
-                        productId: product.id,
-                        image: product.images[0] ?? "",
-                        price: price.unit_amount ?? 0,
-                    },
-                    count: count + 1,
-                },
-            ]);
-        } else {
-            setCart([
-                ...cart,
-                {
-                    id: product.id,
-                    product: {
-                        name: product.name,
-                        productId: product.id,
-                        image: product.images[0] ?? "",
-                        price: price.unit_amount ?? 0,
-                    },
-                    count: 1,
-                },
-            ]);
-        }
-    };
-
     return (
-        <div className="flex h-[400px] flex-col  justify-between overflow-hidden rounded-md border bg-muted/25">
-            <div className="flex flex-col items-center gap-6">
-                {product.images.length > 0 ? (
-                    <Link
-                        href={`/product/${
-                            product.id.split("_")[1]
-                        }_${product.name.replace(" ", "_")}`}
-                    >
-                        <div className="hover:bg-muted">
-                            <Image
-                                width={256}
-                                height={256}
-                                src={product.images[0] ?? ""}
-                                alt={`no image`}
-                            />
-                        </div>
-                    </Link>
-                ) : (
-                    <Link
-                        href={`/product/${
-                            product.id.split("_")[1]
-                        }_${product.name.replace(" ", "_")}`}
-                        className="flex h-[256px] w-[256px] items-center justify-center"
-                    >
-                        <Package size={48} />
-                    </Link>
-                )}
+        <div className="w-[400px] rounded-md border">
+            <div className="flex justify-center overflow-hidden border-b">
+                <Image
+                    src={product.images[0] ?? ""}
+                    alt={product.name}
+                    width={256}
+                    height={256}
+                />
+            </div>
+            <div className="flex items-end justify-between p-4">
+                <div className="space-y-3 pt-4">
+                    <h3 className="font-bold">{product.name}</h3>
+                    {/* <p className="text-muted-foreground">{product.description}</p> */}
+                    <p className="font-semibold">
+                        <Currency price={price} />
+                    </p>
+                </div>
 
                 <Link
-                    className="text-lg font-bold transition-colors hover:text-muted-foreground "
+                    className={cn(buttonVariants())}
                     href={`/product/${product.id.split("_")[1]}_${product.name.replace(
                         " ",
                         "_"
                     )}`}
                 >
-                    {product.name}
+                    View
                 </Link>
-            </div>
-
-            <div className="flex items-center justify-between border-t  p-4">
-                <span className="text-lg font-semibold text-primary">
-                    <Currency price={price} />
-                </span>
-                <Button
-                    onClick={() => addItem(product)}
-                    variant="outlinePrimary"
-                    size="icon"
-                >
-                    <ShoppingCart size={20} />
-                </Button>
             </div>
         </div>
     );
