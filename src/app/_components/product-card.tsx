@@ -20,8 +20,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 <Image
                     src={product.images[0] ?? ""}
                     alt={product.name}
-                    width={256}
-                    height={256}
+                    width={688}
+                    height={386}
                 />
             </div>
             <div className="flex items-end justify-between p-4">
@@ -35,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
                 <Link
                     className={cn(buttonVariants())}
-                    href={`/product/${product.id.split("_")[1]}_${product.name.replace(
+                    href={`/products/${product.id.split("_")[1]}_${product.name.replace(
                         " ",
                         "_"
                     )}`}
