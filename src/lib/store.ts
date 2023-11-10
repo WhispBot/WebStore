@@ -1,7 +1,7 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-interface Product {
+export interface Product {
     id: string;
     name: string;
     image: string;
