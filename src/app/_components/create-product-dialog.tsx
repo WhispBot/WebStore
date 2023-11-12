@@ -1,4 +1,10 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { api } from "~/trpc/react";
+import { Button } from "./ui/button";
 import {
     Dialog,
     DialogContent,
@@ -8,11 +14,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "./ui/dialog";
-import { Plus } from "lucide-react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { api } from "~/trpc/react";
-import { z } from "zod";
 import {
     Form,
     FormControl,
@@ -21,14 +22,13 @@ import {
     FormLabel,
     FormMessage,
 } from "./ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "./ui/input";
 
 const formSchema = z.object({
     name: z.string().min(2, { message: "Name must be at least 2 characters" }),
 });
 
-const CreateDialog = () => {
+const CreateProductDialog = () => {
     const addMutation = api.stripe.createProduct.useMutation();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -93,4 +93,4 @@ const CreateDialog = () => {
     );
 };
 
-export default CreateDialog;
+export default CreateProductDialog;

@@ -1,9 +1,9 @@
 import React from "react";
-import DataTable from "./data-table";
-import { columns } from "./columns";
-import { api } from "~/trpc/server";
-import CreateDialog from "~/app/_components/create-dialog";
+import CreateProductDialog from "~/app/_components/create-product-dialog";
 import { Separator } from "~/app/_components/ui/separator";
+import { api } from "~/trpc/server";
+import { columns } from "./columns";
+import DataTable from "./data-table";
 
 const Page = async () => {
     const data = await api.stripe.products.query();
@@ -18,7 +18,7 @@ const Page = async () => {
                         List of all the products
                     </p>
                 </div>
-                <CreateDialog />
+                <CreateProductDialog />
             </div>
             <Separator />
 
