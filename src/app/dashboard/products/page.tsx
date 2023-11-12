@@ -7,7 +7,6 @@ import DataTable from "./data-table";
 
 const Page = async () => {
     const data = await api.stripe.products.query();
-    // const addMutation = api.stripe.createProduct;
 
     return (
         <div className="space-y-6">
