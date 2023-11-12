@@ -35,10 +35,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
                 <Link
                     className={cn(buttonVariants())}
-                    href={`/products/${product.id.split("_")[1]}_${product.name.replace(
-                        " ",
-                        "_"
-                    )}`}
+                    href={`/products/${product.metadata.type}s/${
+                        product.id.split("_")[1]
+                    }_${product.name.replace(" ", "_")}`}
                 >
                     View
                 </Link>
