@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
 
-import { env } from "~/env.mjs";
 import Stripe from "stripe";
+import { env } from "~/env.mjs";
 import { utapi } from "~/server/uploadthing";
 const stripe = new Stripe(env.STRIPE_API_KEY, { apiVersion: "2023-10-16" });
 
@@ -12,6 +12,7 @@ export const stripeRouter = createTRPCRouter({
 
         return result.data;
     }),
+
     product: publicProcedure
         .input(z.object({ id: z.string() }))
         .query(async ({ input }) => {
