@@ -2,11 +2,11 @@
 
 // import { CreatePost } from "~/app/_components/create-post";
 // import { getServerAuthSession } from "~/server/auth";
+import Link from "next/link";
+import { cn } from "~/lib/utils";
 import { api } from "~/trpc/server";
 import ProductCard from "./_components/product-card";
 import { Button, buttonVariants } from "./_components/ui/button";
-import Link from "next/link";
-import { cn } from "~/lib/utils";
 
 export default async function Home() {
     const res = await api.stripe.products.query();
@@ -90,8 +90,8 @@ export default async function Home() {
                 </div>
             </div>
             <div className="py-16 text-center font-bold uppercase">products</div>
-            <div className="flex flex-col items-center justify-center">
-                <div className="flex gap-8">
+            <div className="">
+                <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px_,_1fr))] gap-4">
                     {res.map((product) => (
                         <ProductCard product={product} key={product.id} />
                     ))}

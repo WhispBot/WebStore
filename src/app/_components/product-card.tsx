@@ -15,17 +15,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const price = product.default_price as Stripe.Price;
 
     return (
-        <div className="w-[400px] rounded-md border">
-            <div className="flex justify-center overflow-hidden border-b">
+        <div className="flex flex-col justify-between rounded-md border ">
+            <div
+                className="flex aspect-video items-center justify-center overflow-hidden"
+                style={{}}
+            >
                 <Image
                     src={product.images[0] ?? ""}
                     alt={product.name}
                     width={688}
                     height={386}
+                    className="aspect-video"
                 />
             </div>
-            <div className="flex items-end justify-between p-4">
-                <div className="space-y-3 pt-4">
+            <div className="flex items-end justify-between border-t p-4">
+                <div className="space-y-4 ">
                     <h3 className="font-bold">{product.name}</h3>
                     {/* <p className="text-muted-foreground">{product.description}</p> */}
                     <p className="font-semibold">

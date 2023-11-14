@@ -34,8 +34,10 @@ const Layout: React.FC<PropsWithChildren> = ({ children }) => {
                                     size={16}
                                 />
                                 {index === arr.length - 1 ? (
-                                    <span className="px-2 text-muted-foreground">
-                                        {name.split("_").slice(1).join(" ")}
+                                    <span className="px-2 capitalize text-muted-foreground">
+                                        {name.split("_").length > 1
+                                            ? name.split("_").slice(1).join(" ")
+                                            : name}
                                     </span>
                                 ) : (
                                     <Link

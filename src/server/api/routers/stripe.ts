@@ -137,4 +137,31 @@ export const stripeRouter = createTRPCRouter({
             const res = await stripe.checkout.sessions.retrieve(input.sessionId);
             return res;
         }),
+
+    productByType: publicProcedure
+        .input(
+            z.object({
+                type: z.string(),
+                limit: z.number().min(1).max(100),
+                cursor: z.string().nullish(),
+            })
+        )
+        .query(async ({ input }) => {
+            if (input.cursor) {
+                const res = await stripe.products.search({
+                    page: input.cursor,
+                    limit: input.limit,
+                    expand: ["data.default_price"],
+                    query: `metadata["type"]:"${input.type}"`,
+                });
+                return res;
+            } else {
+                const res = await stripe.products.search({
+                    limit: input.limit,
+                    expand: ["data.default_price"],
+                    query: `metadata["type"]:"${input.type}"`,
+                });
+                return res;
+            }
+        }),
 });

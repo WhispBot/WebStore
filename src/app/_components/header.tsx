@@ -1,9 +1,9 @@
+import Link from "next/link";
 import { getServerAuthSession } from "~/server/auth";
 import NavLink from "./nav-link";
-import Link from "next/link";
 import ProfileDropdown from "./profile-dropdown";
-import ThemeToggle from "./toggle-theme";
 import ShopingCart from "./shoping-cart";
+import ThemeToggle from "./toggle-theme";
 
 export default async function Header() {
     const session = await getServerAuthSession();
@@ -17,11 +17,8 @@ export default async function Header() {
                     </Link>
                 </div>
                 <div className="flex gap-8">
-                    <NavLink href="/product">Stickers</NavLink>
-                    <NavLink href="/product">Posters</NavLink>
-                    <NavLink href="/product">Accessories</NavLink>
-                    <NavLink href="/product">t-shirts</NavLink>
-                    {/* <NavLink href="/about">About</NavLink> */}
+                    <NavLink href="/products/stickers">Stickers</NavLink>
+                    <NavLink href="/products/posters">Posters</NavLink>
                 </div>
                 <div className="flex gap-4">
                     <ShopingCart />
