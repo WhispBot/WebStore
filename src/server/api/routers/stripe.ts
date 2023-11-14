@@ -52,9 +52,12 @@ export const stripeRouter = createTRPCRouter({
         }),
 
     createProduct: protectedProcedure
-        .input(z.object({ name: z.string() }))
+        .input(z.object({ name: z.string(), type: z.string() }))
         .mutation(async ({ input }) => {
-            const result = await stripe.products.create({ name: input.name });
+            const result = await stripe.products.create({
+                name: input.name,
+                metadata: { type: input.type },
+            });
             return result;
         }),
 

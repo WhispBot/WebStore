@@ -1,12 +1,14 @@
+"use client";
 import React from "react";
 import CreateProductDialog from "~/app/_components/create-product-dialog";
+import LoadingSpinner from "~/app/_components/loading-spinner";
 import { Separator } from "~/app/_components/ui/separator";
-import { api } from "~/trpc/server";
+import { api } from "~/trpc/react";
 import { columns } from "./columns";
 import DataTable from "./data-table";
 
-const Page = async () => {
-    const data = await api.stripe.products.query();
+const Page = () => {
+    const { data, isLoading } = api.stripe.products.useQuery();
 
     return (
         <div className="space-y-6">
@@ -20,9 +22,14 @@ const Page = async () => {
                 <CreateProductDialog />
             </div>
             <Separator />
-
             <div className="">
-                <DataTable columns={columns} data={data} />
+                {isLoading ? (
+                    <div className="flex justify-center">
+                        <LoadingSpinner />
+                    </div>
+                ) : (
+                    <DataTable columns={columns} data={data ?? []} />
+                )}
             </div>
         </div>
     );
