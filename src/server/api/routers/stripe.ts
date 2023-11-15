@@ -138,6 +138,30 @@ export const stripeRouter = createTRPCRouter({
             return res;
         }),
 
+    productInfinite: publicProcedure
+        .input(
+            z.object({
+                limit: z.number().min(1).max(100),
+                cursor: z.string().nullish(),
+            })
+        )
+        .query(async ({ input }) => {
+            if (input.cursor) {
+                const res = await stripe.products.list({
+                    expand: ["data.default_price"],
+                    limit: input.limit,
+                    starting_after: input.cursor,
+                });
+                return res;
+            } else {
+                const res = await stripe.products.list({
+                    limit: input.limit,
+                    expand: ["data.default_price"],
+                });
+                return res;
+            }
+        }),
+
     productByType: publicProcedure
         .input(
             z.object({
