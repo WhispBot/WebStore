@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/server";
-import ProductCard from "./_components/product-card";
+import ProductCard from "./_components/cards/product-card";
 import { Button, buttonVariants } from "./_components/ui/button";
 
 export default async function Home() {

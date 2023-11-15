@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { getServerAuthSession } from "~/server/auth";
+import ProfileDropdown from "../profile-dropdown";
+import ShopingCart from "../shoping-cart";
+import ThemeToggle from "../toggle-theme";
 import NavLink from "./nav-link";
-import ProfileDropdown from "./profile-dropdown";
-import ShopingCart from "./shoping-cart";
-import ThemeToggle from "./toggle-theme";
 
 export default async function Header() {
     const session = await getServerAuthSession();

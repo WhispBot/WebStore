@@ -1,7 +1,7 @@
+import { redirect } from "next/navigation";
 import React, { type PropsWithChildren } from "react";
 import { getServerAuthSession } from "~/server/auth";
-import { redirect } from "next/navigation";
-import { SidebarNav } from "../_components/sidebar-nav";
+import { SidebarNav } from "../_components/navigations/sidebar-nav";
 
 const sidebarNavItems = [
     {

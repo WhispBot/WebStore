@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import CreateProductDialog from "~/app/_components/create-product-dialog";
+import CreateProductDialog from "~/app/_components/dialogs/create-product-dialog";
 import LoadingSpinner from "~/app/_components/loading-spinner";
 import { Separator } from "~/app/_components/ui/separator";
 import { api } from "~/trpc/react";

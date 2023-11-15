@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
+import ProductCard from "~/app/_components/cards/product-card";
 import LoadingSpinner from "~/app/_components/loading-spinner";
-import ProductCard from "~/app/_components/product-card";
 import { Button } from "~/app/_components/ui/button";
 import { api } from "~/trpc/react";
 

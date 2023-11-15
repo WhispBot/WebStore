@@ -4,8 +4,8 @@ import Link from "next/link";
 import React from "react";
 import type Stripe from "stripe";
 import { cn } from "~/lib/utils";
-import Currency from "./currency";
-import { buttonVariants } from "./ui/button";
+import Currency from "../currency";
+import { buttonVariants } from "../ui/button";
 
 interface ProductCardProps {
     product: Stripe.Product;

@@ -1,12 +1,12 @@
 "use client";
-import React from "react";
-import { Separator } from "./ui/separator";
-import LoadingSpinner from "./loading-spinner";
-import DataTable from "../dashboard/products/data-table";
-import { columns } from "../dashboard/products/[id]/columns";
 import { Calculator } from "lucide-react";
+import React from "react";
 import { api } from "~/trpc/react";
-import CreatePriceDialog from "./create-price-dialog";
+import { columns } from "../dashboard/products/[id]/columns";
+import DataTable from "../dashboard/products/data-table";
+import CreatePriceDialog from "./dialogs/create-price-dialog";
+import LoadingSpinner from "./loading-spinner";
+import { Separator } from "./ui/separator";
 
 interface ProductPriceProps {
     productId: string;
