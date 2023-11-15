@@ -8,7 +8,7 @@ import { api } from "~/trpc/react";
 const Posters = () => {
     const { data, fetchNextPage, hasNextPage, isInitialLoading, isFetchingNextPage } =
         api.stripe.productByType.useInfiniteQuery(
-            { type: "poster", limit: 1 },
+            { type: "poster", limit: 9 },
             {
                 getNextPageParam: (lastPage) => lastPage.next_page,
             }
