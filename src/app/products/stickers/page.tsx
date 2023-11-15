@@ -16,7 +16,7 @@ import {
 import { api } from "~/trpc/react";
 
 const Stickers = () => {
-    const { data, fetchNextPage, hasNextPage, isInitialLoading } =
+    const { data, fetchNextPage, hasNextPage, isInitialLoading, isLoading } =
         api.stripe.productByType.useInfiniteQuery(
             { type: "sticker", limit: 10 },
             {
@@ -61,10 +61,20 @@ const Stickers = () => {
                             ))}
                         </>
                     ))}
-                    {isInitialLoading && <LoadingSpinner size={48} />}
                 </section>
+
+                {isInitialLoading && (
+                    <div className="flex justify-center">
+                        <LoadingSpinner size={48} />
+                    </div>
+                )}
+
                 {hasNextPage && (
-                    <Button onClick={() => fetchNextPage()}>Load more</Button>
+                    <div className="flex justify-center">
+                        <Button onClick={() => fetchNextPage()} disabled={isLoading}>
+                            {isLoading ? <LoadingSpinner size={48} /> : <>Load more</>}
+                        </Button>
+                    </div>
                 )}
             </div>
         </main>
