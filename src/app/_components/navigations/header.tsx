@@ -9,7 +9,7 @@ export default async function Header() {
     const session = await getServerAuthSession();
 
     return (
-        <nav className="sticky top-0 flex h-16 select-none items-center justify-between border-b-2 bg-background py-4">
+        <nav className="sticky top-0 flex h-16 z-50 select-none items-center justify-between border-b-2 bg-background py-4">
             <div className="container flex items-center justify-between">
                 <div className="">
                     <Link href="/" className="font-semibold uppercase">
