@@ -23,7 +23,7 @@ interface PageProps {
 }
 
 const Product: React.FC<PageProps> = async ({ params }) => {
-    const id = `prod_${params.id.split("_")[0]}`;
+    const id = params.id.split("%20")[0] ?? "";
     const product = await api.stripe.product.query({ id });
     const price = product.default_price as Stripe.Price;
 

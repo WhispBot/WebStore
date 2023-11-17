@@ -21,9 +21,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <Card>
             <CardContent className="relative p-0">
                 <Link
-                    href={`/products/${product.metadata.type}s/${
-                        product.id.split("_")[1]
-                    }_${product.name.replace(" ", "_")}`}
+                    href={`/products/${product.metadata.type}s/${product.id}%20${product.name}`}
                 >
                     <Image
                         src={product.images[0] ?? ""}
@@ -53,9 +51,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 </div>
                 <Link
                     className={cn(buttonVariants({ size: "sm" }))}
-                    href={`/products/${product.metadata.type}s/${
-                        product.id.split("_")[1]
-                    }_${product.name.replace(" ", "_")}`}
+                    href={`/products/${product.metadata.type}s/${product.id}%20${product.name}`}
                 >
                     View
                 </Link>
