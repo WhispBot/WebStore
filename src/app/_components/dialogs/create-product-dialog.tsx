@@ -80,13 +80,13 @@ const CreateProductDialog = () => {
                     Add product
                 </Button>
             </DialogTrigger>
-            <DialogContent className="p-0 sm:max-w-[425px]">
+            <DialogContent className="bg-card p-0 sm:max-w-[425px]">
                 <DialogHeader className="mb-0 space-y-0 p-4">
                     <DialogTitle>Add new product</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                        <div className="space-y-2 border-y bg-muted p-4">
+                        <div className="space-y-4 p-4">
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -133,15 +133,11 @@ const CreateProductDialog = () => {
                                 )}
                             />
                         </div>
-                        <div className="flex justify-end gap-2 p-2">
+                        <div className="flex justify-end gap-2 p-4">
                             <DialogClose asChild>
-                                <Button variant="outline" size="sm">
-                                    Cancel
-                                </Button>
+                                <Button variant="outline">Cancel</Button>
                             </DialogClose>
-                            <Button type="submit" size="sm">
-                                Add
-                            </Button>
+                            <Button type="submit">Add</Button>
                         </div>
                     </form>
                 </Form>

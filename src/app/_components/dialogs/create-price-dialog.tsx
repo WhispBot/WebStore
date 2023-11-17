@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,9 +48,11 @@ interface CreatePriceDialog {
 const CreatePriceDialog: React.FC<CreatePriceDialog> = ({ productId }) => {
     const { toast } = useToast();
     const utils = api.useUtils();
+    const [open, setOpen] = React.useState(false);
 
     const { mutate } = api.stripe.createPrice.useMutation({
         onSuccess: () => {
+            setOpen(false);
             toast({
                 title: "Price added!",
             });
@@ -84,131 +87,124 @@ const CreatePriceDialog: React.FC<CreatePriceDialog> = ({ productId }) => {
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button className="flex gap-2" size="sm" variant="secondary">
                     <Plus />
                     Add price
                 </Button>
             </DialogTrigger>
-            <DialogContent className="p-0 sm:max-w-[425px]">
+            <DialogContent className="bg-card p-0 sm:max-w-[425px]">
                 <DialogHeader className="p-4">
                     <DialogTitle>Add new price</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="">
-                        <div className="flex justify-center border-y bg-muted p-4">
-                            <div className="w-2/3 space-y-6">
+                        <div className="space-y-4 p-4">
+                            <FormField
+                                control={form.control}
+                                name="pricingModel"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Pricing model</FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="per_unit">
+                                                    Standard Pricing
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="grid grid-flow-col">
                                 <FormField
                                     control={form.control}
-                                    name="pricingModel"
+                                    name="price"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Pricing model</FormLabel>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger>
-                                                        <SelectValue />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    <SelectItem value="per_unit">
-                                                        Standard Pricing
-                                                    </SelectItem>
-                                                </SelectContent>
-                                            </Select>
-
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                <div className="flex gap-4">
-                                    <FormField
-                                        control={form.control}
-                                        name="price"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Price</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder=""
-                                                        {...field}
-                                                        onChange={(e) =>
-                                                            field.onChange(
-                                                                isNumber(e.target.value)
-                                                            )
-                                                        }
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="currency"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Currency</FormLabel>
-                                                <Select
-                                                    onValueChange={field.onChange}
-                                                    defaultValue={field.value}
-                                                >
-                                                    <FormControl>
-                                                        <SelectTrigger>
-                                                            <SelectValue />
-                                                        </SelectTrigger>
-                                                    </FormControl>
-                                                    <SelectContent>
-                                                        <SelectItem value="sek">
-                                                            SEK
-                                                        </SelectItem>
-                                                    </SelectContent>
-                                                </Select>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-
-                                <FormField
-                                    control={form.control}
-                                    name="type"
-                                    render={({ field }) => (
-                                        <FormItem className="space-y-3">
-                                            <FormLabel></FormLabel>
+                                            <FormLabel>Price</FormLabel>
                                             <FormControl>
-                                                <RadioGroup
-                                                    onValueChange={field.onChange}
-                                                    defaultValue={field.value}
-                                                    className="flex space-x-1"
-                                                >
-                                                    {/* <FormItem className="flex items-center space-x-3 space-y-0">
-                                                        <FormControl>
-                                                            <RadioGroupItem value="Recurring" />
-                                                        </FormControl>
-                                                        <FormLabel className="font-normal">
-                                                            Recurring
-                                                        </FormLabel>
-                                                    </FormItem> */}
-                                                    <FormItem className="flex items-center space-x-3 space-y-0">
-                                                        <FormControl>
-                                                            <RadioGroupItem value="one_time" />
-                                                        </FormControl>
-                                                        <FormLabel className="font-normal">
-                                                            One time
-                                                        </FormLabel>
-                                                    </FormItem>
-                                                </RadioGroup>
+                                                <Input
+                                                    className="rounded-r-none"
+                                                    placeholder=""
+                                                    {...field}
+                                                    onChange={(e) =>
+                                                        field.onChange(
+                                                            isNumber(e.target.value)
+                                                        )
+                                                    }
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
+                                <FormField
+                                    control={form.control}
+                                    name="currency"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-transparent">
+                                                Currency
+                                            </FormLabel>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger className="rounded-none rounded-r-md  border-l-0">
+                                                        <SelectValue />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="sek">
+                                                        SEK
+                                                    </SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                             </div>
+
+                            <FormField
+                                control={form.control}
+                                name="type"
+                                render={({ field }) => (
+                                    <FormItem className="space-y-3">
+                                        <FormLabel></FormLabel>
+                                        <FormControl>
+                                            <RadioGroup
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value}
+                                                className="flex space-x-1"
+                                            >
+                                                <FormItem className="flex items-center space-x-3 space-y-0">
+                                                    <FormControl>
+                                                        <RadioGroupItem value="one_time" />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal">
+                                                        One time
+                                                    </FormLabel>
+                                                </FormItem>
+                                            </RadioGroup>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         </div>
                         <div className="flex justify-end gap-2 p-4">
                             <DialogClose asChild>
