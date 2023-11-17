@@ -2,6 +2,7 @@ import { Heart } from "lucide-react";
 import React from "react";
 import type Stripe from "stripe";
 import AddToCartButton from "~/app/_components/add-to-cart-button";
+import ProductCard from "~/app/_components/cards/product-card";
 import Currency from "~/app/_components/currency";
 import ImageCarousel from "~/app/_components/image-carousel";
 import Tooltip from "~/app/_components/tooltip";
@@ -25,6 +26,10 @@ interface PageProps {
 const Product: React.FC<PageProps> = async ({ params }) => {
     const id = params.id.split("%20")[0] ?? "";
     const product = await api.stripe.product.query({ id });
+    const SimilarProducts = await api.stripe.productByType.query({
+        type: product.metadata.type ?? "",
+        limit: 4,
+    });
     const price = product.default_price as Stripe.Price;
 
     return (
@@ -87,7 +92,18 @@ const Product: React.FC<PageProps> = async ({ params }) => {
                         </Card>
                     </TabsContent>
                 </Tabs>
-                <div></div>
+                <div className="space-y-4">
+                    <h4 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                        Similar products
+                    </h4>
+                    <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px_,_1fr))] gap-4">
+                        {SimilarProducts.data
+                            .filter((p) => p.id !== product.id)
+                            .map((prod) => (
+                                <ProductCard product={prod} key={prod.id} />
+                            ))}
+                    </div>
+                </div>
             </div>
         </main>
     );
