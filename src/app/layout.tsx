@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 
 import { cn } from "~/lib/utils";
 import { TRPCReactProvider } from "~/trpc/react";
+import Footer from "./_components/navigations/footer";
 import Header from "./_components/navigations/header";
 import { ThemeProvider } from "./_components/theme-provider";
 import { Toaster } from "./_components/ui/toaster";
@@ -31,9 +32,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 >
                     <TRPCReactProvider headers={headers()}>
                         <JotaiProvider>
+                            <Toaster />
                             <Header />
                             {children}
-                            <Toaster />
+                            <Footer />
                         </JotaiProvider>
                     </TRPCReactProvider>
                 </ThemeProvider>
