@@ -4,7 +4,6 @@ import type Stripe from "stripe";
 import AddToCartButton from "~/app/_components/add-to-cart-button";
 import Currency from "~/app/_components/currency";
 import ImageCarousel from "~/app/_components/image-carousel";
-import SimilarProducts from "~/app/_components/similar-products";
 import Tooltip from "~/app/_components/tooltip";
 import { Button } from "~/app/_components/ui/button";
 import {

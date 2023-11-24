@@ -1,5 +1,4 @@
 import {
-    Copyright,
     Facebook,
     Instagram,
     Linkedin,
@@ -15,8 +14,8 @@ import { buttonVariants } from "../ui/button";
 
 const Footer = () => {
     return (
-        <footer className="mt-16 border-t">
-            <section className="container flex justify-around gap-8 py-20">
+        <footer className="border-t">
+            <section className="container flex justify-around gap-8  py-16">
                 <div>
                     <h4 className="pb-4 text-xl font-semibold">Information</h4>
                     <ul className="space-y-4">
