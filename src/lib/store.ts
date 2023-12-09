@@ -1,5 +1,6 @@
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import type Stripe from "stripe";
 
 export interface Product {
     id: string;
@@ -8,9 +9,22 @@ export interface Product {
     description: string;
     quantity: number;
     price: number | null;
+    priceId: string;
 }
 
 export const cartStorage = atomWithStorage<Product[]>("cart", []);
+
+export const cartToCheckoutAtom = atom((get) => {
+    const atom = get(cartStorage);
+    return atom.reduce((acc: { price: string; quantity: number }[], obj) => {
+        const newObj = {
+            price: obj.priceId,
+            quantity: obj.quantity,
+        };
+        acc.push(newObj);
+        return acc;
+    }, []);
+});
 
 export const addToCartAtom = atom(null, (get, set, update: Product) => {
     const cart = get(cartStorage);

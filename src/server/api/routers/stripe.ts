@@ -108,14 +108,13 @@ export const stripeRouter = createTRPCRouter({
     checkoutSession: publicProcedure
         .input(
             z.object({
-                email: z.string(),
+                email: z.string().optional(),
                 items: z.object({ price: z.string(), quantity: z.number() }).array(),
             })
         )
         .mutation(async ({ input, ctx }) => {
-            const res = await stripe.checkout.sessions.create({
+            const resObj: Stripe.Checkout.SessionCreateParams = {
                 ui_mode: "embedded",
-                customer_email: input.email,
                 submit_type: "pay",
                 line_items: input.items,
                 customer_creation: "always",
@@ -123,7 +122,10 @@ export const stripeRouter = createTRPCRouter({
                 return_url: `${ctx.headers.get(
                     "host"
                 )}/return?session_id={CHECKOUT_SESSION_ID}`,
-            });
+            };
+            if (input.email) resObj.customer_email = input.email;
+
+            const res = await stripe.checkout.sessions.create(resObj);
             return res.client_secret;
         }),
 
